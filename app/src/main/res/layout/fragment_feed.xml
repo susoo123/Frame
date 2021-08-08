@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--프래그먼트3은 피드 화면-->
+    <RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragment.FeedFragment"
+        android:orientation="vertical"
+        android:scrollbarFadeDuration="0"
+        android:scrollbarSize="0dp"
+       >
+
+        <!-- 피드 들어가는 리사이클러뷰 -->
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/floatingActionButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|bottom"
+            android:backgroundTint="@color/colorG"
+            android:clickable="true"
+            android:layout_marginBottom="75dp"
+            android:layout_marginEnd="16dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:src="@drawable/ic_baseline_add_24" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/frag3_rv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            android:background="#efefef"
+            android:scrollbarFadeDuration="0"
+            android:scrollbarSize="0dp"
+            android:scrollbarThumbVertical="@color/colorG"
+            android:scrollbars="vertical" />
+
+
+
+    </RelativeLayout>
+

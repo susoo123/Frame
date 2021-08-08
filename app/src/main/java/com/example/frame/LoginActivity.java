@@ -7,6 +7,8 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.AuthFailureError;
@@ -16,6 +18,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.frame.etc.SessionManager;
 import com.google.android.material.textfield.TextInputEditText;
 import com.kakao.auth.ISessionCallback;
 import com.kakao.auth.Session;
@@ -50,6 +53,9 @@ public class LoginActivity extends AppCompatActivity {
     private  TextView btn_login, btn_findingIdPw, btn_register;
     private ProgressBar loading;
     private static String URL_Login ="http://ec2-52-79-204-252.ap-northeast-2.compute.amazonaws.com/login.php";
+    private static String URL_email ="http://ec2-52-79-204-252.ap-northeast-2.compute.amazonaws.com/register.php";
+    private AlertDialog dialog;
+    SessionManager sessionManager;
 
     //카카오 로그인 관련
     private ISessionCallback mSessionCallback;
@@ -58,6 +64,8 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         //getHashKey();
+
+        sessionManager = new SessionManager(this);
 
         //카카오 로그인 구현
         mSessionCallback = new ISessionCallback() {
@@ -121,6 +129,8 @@ public class LoginActivity extends AppCompatActivity {
         email = findViewById(R.id.login_email);
         password = findViewById(R.id.login_pw);
         loading = findViewById(R.id.loading);
+        btn_findingIdPw = findViewById(R.id.btn_findingIdPw_tv);
+
 
         btn_login.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -145,8 +155,16 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        btn_findingIdPw.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(LoginActivity.this, ForgetPWActivity.class));
+            }
+        });
+
     }
 
+    //로그인 함수
     private void Login(String email, String password) {
         loading.setVisibility(View.VISIBLE);
         btn_login.setVisibility(View.GONE);
@@ -164,8 +182,12 @@ public class LoginActivity extends AppCompatActivity {
                                for (int i = 0; i < jsonArray.length(); i++){
 
                                    JSONObject object = jsonArray.getJSONObject(i);
-                                   //String name = object.getString("name").trim();
-                                   //String email = object.getString("email").trim();
+                                   String name = object.getString("name").trim();
+                                   String email = object.getString("email").trim();
+                                   sessionManager.createSession(name,email);
+
+                                   Log.d("soo","로그인 json 데이터 email : "+email);
+                                   Log.d("soo","로그인 json 데이터  : "+jsonArray);
 
                                    Toast.makeText(LoginActivity.this,"로그인 성공", Toast.LENGTH_SHORT).show();
                                    loading.setVisibility(View.GONE);
@@ -177,8 +199,17 @@ public class LoginActivity extends AppCompatActivity {
                                loading.setVisibility(View.GONE);
                                btn_login.setVisibility(View.VISIBLE);
                                String message = jsonObject.getString("message");
+                               //이메일인증 안되면 여기서 인증해달라는 토스트가 뜸.
                                Toast.makeText(LoginActivity.this, message , Toast.LENGTH_SHORT).show();
-                               Log.d("soo","로그인 에러");
+
+                               AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
+                               dialog = builder.setMessage("이메일을 인증하지 않았습니다. 이메일을 다시 보내겠습니까?")
+                                       .setNegativeButton("이메일 보내기", null)
+                                       .setPositiveButton("취소",null )
+                                       .create();
+
+                               dialog.show();
+                               Log.d("soo","로그인 에러//이메일 인증 안됨. ");
                            }
 
                         } catch (JSONException e) {
@@ -201,6 +232,8 @@ public class LoginActivity extends AppCompatActivity {
 
                     }
                 })
+
+
         {
 
             @Override
@@ -220,6 +253,17 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
+
+
+
+
+
+
+
+
+
+
+    //해시키 얻기 함수
     private void getHashKey(){
         PackageInfo packageInfo = null;
         try {

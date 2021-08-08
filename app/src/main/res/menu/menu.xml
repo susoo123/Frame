@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/home"
+        android:title="홈"
+        android:icon="@drawable/ic_outline_home_24"/>
+
+    <item
+        android:id="@+id/search"
+        android:title="검색"
+        android:icon="@drawable/ic_baseline_search_24"/>
+
+    <item
+        android:id="@+id/event"
+        android:title="이벤트"
+        android:icon="@drawable/ic_baseline_panorama_horizontal_24"/>
+
+    <item
+        android:id="@+id/feed"
+        android:title="피드"
+        android:icon="@drawable/ic_baseline_video_label_24"/>
+
+    <item
+        android:id="@+id/mypage"
+        android:title="마이페이지"
+        android:icon="@drawable/ic_outline_widgets_24"/>
+
+
+</menu>
