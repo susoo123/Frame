@@ -8,7 +8,7 @@
         <entry key="..\:/Users/susoo/AndroidStudioProjects/Frame/app/src/main/res/drawable/ic_date.xml" value="0.12222222222222222" />
         <entry key="..\:/Users/susoo/AndroidStudioProjects/Frame/app/src/main/res/drawable/round_white.xml" value="0.1824074074074074" />
         <entry key="..\:/Users/susoo/AndroidStudioProjects/Frame/app/src/main/res/layout/activity_detail_exhibition.xml" value="0.3333333333333333" />
-        <entry key="..\:/Users/susoo/AndroidStudioProjects/Frame/app/src/main/res/layout/activity_edit_profile.xml" value="0.3333333333333333" />
+        <entry key="..\:/Users/susoo/AndroidStudioProjects/Frame/app/src/main/res/layout/activity_edit_profile.xml" value="0.13914373088685014" />
         <entry key="..\:/Users/susoo/AndroidStudioProjects/Frame/app/src/main/res/layout/activity_login.xml" value="0.10643115942028986" />
         <entry key="..\:/Users/susoo/AndroidStudioProjects/Frame/app/src/main/res/layout/activity_register.xml" value="0.10643115942028986" />
         <entry key="..\:/Users/susoo/AndroidStudioProjects/Frame/app/src/main/res/layout/fragment_detail__exhibition.xml" value="0.12182971014492754" />
@@ -23,6 +23,7 @@
         <entry key="..\:/Users/susoo/AndroidStudioProjects/Frame/app/src/main/res/layout/item_home_poster_container.xml" value="0.1" />
         <entry key="..\:/Users/susoo/AndroidStudioProjects/Frame/app/src/main/res/layout/item_test.xml" value="0.3333333333333333" />
         <entry key="..\:/Users/susoo/AndroidStudioProjects/Frame/app/src/main/res/layout/rv_search_row.xml" value="0.3333333333333333" />
+        <entry key="..\:/Users/susoo/AndroidStudioProjects/Frame/app/src/main/res/xml/network_security_config.xml" value="0.11927083333333334" />
       </map>
     </option>
   </component>

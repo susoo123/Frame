@@ -7,11 +7,11 @@ import android.widget.ImageView;
 public class DataModel {
 
 
-    private int rv_img1;
+    private String rv_img1;
     private String title;
     private String place;
 
-    public DataModel(int rv_img1, String title,String place){
+    public DataModel(String rv_img1, String title,String place){
         this.rv_img1 = rv_img1;
         this.title = title;
         this.place = place;
@@ -24,7 +24,7 @@ public class DataModel {
 
     }
 
-    public int getRv_img1() {
+    public String getRv_img1() {
         return rv_img1;
     }
 

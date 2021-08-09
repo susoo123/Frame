@@ -24,21 +24,21 @@
         android:layout_marginTop="15dp"
         android:layout_height="400dp" />
 
-    <TextView
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="25dp"
-        android:layout_marginBottom="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:text="인기 전시"
-        android:textStyle="bold"
-        android:textSize="20sp" />
+<!--    <TextView-->
+<!--        android:layout_marginLeft="10dp"-->
+<!--        android:layout_marginTop="25dp"-->
+<!--        android:layout_marginBottom="10dp"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="30dp"-->
+<!--        android:text="인기 전시"-->
+<!--        android:textStyle="bold"-->
+<!--        android:textSize="20sp" />-->
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:layout_marginHorizontal="10dp"
-        android:background="@color/colorGrey"
-        android:layout_width="match_parent"
-        android:layout_height="100dp" />
+<!--    <androidx.recyclerview.widget.RecyclerView-->
+<!--        android:layout_marginHorizontal="10dp"-->
+<!--        android:background="@color/colorGrey"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="100dp" />-->
 
 
     <TextView

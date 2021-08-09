@@ -19,6 +19,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+
 import com.android.volley.toolbox.Volley;
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -102,6 +103,7 @@ public class ForgetPWActivity extends AppCompatActivity {
                         }
                     }
                 };
+
                 ValidateRequest validateRequest = new ValidateRequest(UserEmail, responseListener);
                 RequestQueue queue = Volley.newRequestQueue(ForgetPWActivity.this);
                 queue.add(validateRequest);
@@ -180,9 +182,10 @@ public class ForgetPWActivity extends AppCompatActivity {
                         }
                     }
                 },
-                new Response.ErrorListener() {//에러 콜백
+                new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+
                         Toast.makeText(ForgetPWActivity.this, "비밀번호 변경 이메일 인증 에러" + error.toString(),Toast.LENGTH_SHORT).show();
                         loading.setVisibility(View.GONE);
                         btn_sendPWEmail.setVisibility(View.VISIBLE);

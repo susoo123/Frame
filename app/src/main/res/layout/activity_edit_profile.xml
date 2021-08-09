@@ -45,7 +45,9 @@ tools:context=".EditProfileActivity">
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
-        <ImageView
+        <ImageButton
+            android:id="@+id/btn_photo_profile"
+            android:background="@color/white"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_alignParentStart="true"
@@ -60,8 +62,17 @@ tools:context=".EditProfileActivity">
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="1.0" />
 
+<!--        <de.hdodenhof.circleimageview.CircleImageView-->
+<!--            android:id="@+id/imageView3"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toTopOf="parent"-->
+<!--            android:src="@drawable/app_logo"-->
+<!--            android:layout_width="100dp"-->
+<!--            android:layout_height="100dp"/>-->
+
         <ImageView
-            android:id="@+id/imageView3"
+            android:id="@+id/imageView33"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_gravity="center"
@@ -169,7 +180,7 @@ tools:context=".EditProfileActivity">
 
 
     <TextView
-        android:id="@+id/btn_register"
+        android:id="@+id/btn_edit_profile"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_marginTop="20dp"

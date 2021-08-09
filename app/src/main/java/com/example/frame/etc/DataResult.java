@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 
 
 
-    //@Generated("jsonschema2pojo")
+//@Generated("jsonschema2pojo")
 public class DataResult {
 
         @SerializedName("seq")
