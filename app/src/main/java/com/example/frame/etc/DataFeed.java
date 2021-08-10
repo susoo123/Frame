@@ -12,6 +12,6 @@ public class DataFeed {
     private String id;
     private String userImg;
     private String userUid;
-    private ArrayList<String> formats;// 이게 이미지 경로로인가?
+    private ArrayList<String> formats;// 전체 포맷 어레이
 
 }

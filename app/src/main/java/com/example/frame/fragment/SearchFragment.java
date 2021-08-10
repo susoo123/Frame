@@ -16,11 +16,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.widget.Toast;
+
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -28,18 +24,13 @@ import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.frame.Detail_exhibition;
-import com.example.frame.EditProfileActivity;
-import com.example.frame.LoginActivity;
-import com.example.frame.MainActivity;
+
 import com.example.frame.R;
 import com.example.frame.adapter.SearchAdapter;
 
 import com.example.frame.etc.AppHelper;
 import com.example.frame.etc.DataModel;
-import com.example.frame.etc.DataResult;
-import com.google.gson.Gson;
-import com.google.gson.JsonParser;
+
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -48,10 +39,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 
 public class SearchFragment extends Fragment implements SearchAdapter.ItemClickListener{

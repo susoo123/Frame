@@ -86,8 +86,9 @@ ImageView photo;
         //Log.e("soo","쉐어드 확인: "+mEmail);
 
         // Glide로 이미지 표시하기
-//        String imageUrl = "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory&fname=https://k.kakaocdn.net/dn/EShJF/btquPLT192D/SRxSvXqcWjHRTju3kHcOQK/img.png";
-//        Glide.with(this).load(imageUrl).into(photo);
+        String imageUrl2 = " http://www.culture.go.kr/upload/rdf/21/03/rdf_2021033110325407198.jpg";
+        String imageUrl = "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory&fname=https://k.kakaocdn.net/dn/EShJF/btquPLT192D/SRxSvXqcWjHRTju3kHcOQK/img.png";
+        Glide.with(this).load(imageUrl2).into(photo);
 
 
 
@@ -120,8 +121,6 @@ ImageView photo;
                                     String db_birth = object.getString("birth").trim();
                                     String db_phone_num = object.getString("phone_num").trim();
 
-
-                                    Log.e("soo","db에서 가져온 값 " + db_name);
                                     email.setText(db_email);
                                     email.setEnabled(false); //이메일 값 고정
 
@@ -129,7 +128,6 @@ ImageView photo;
                                     birth.setText(db_birth);
                                     phone_num.setText(db_phone_num);
 
-                                    Log.e("soo","db에서 가져온 값 " + db_phone_num);
                                 }
 
 

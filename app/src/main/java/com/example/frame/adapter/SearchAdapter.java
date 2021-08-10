@@ -94,66 +94,14 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MyViewHold
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
 
-//        DataResult apiData = list.get(position);
-//        RequestOptions requestOptions = new RequestOptions();
-//        requestOptions.placeholder(Utils.getRandomDrawbleColor());
-//        requestOptions.error(Utils.getRandomDrawbleColor());
-//        requestOptions.centerCrop();
-
-//        Glide.with(context)
-//                .load(apiData.getThumbnail())
-//                .apply(requestOptions)
-//                .listener(new RequestListener<Drawable>() {
-//                    @Override
-//                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-//                        holder.progressBar.setVisibility(View.GONE);
-//
-//                        return false;
-//                    }
-//
-//                    @Override
-//                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-//                        holder.progressBar.setVisibility(View.GONE);
-//                        return false;
-//                    }
-//                })
-//                .transition(DrawableTransitionOptions.withCrossFade())
-//                .into(holder.poster);
-//
-//
-//        holder.title2.setText(apiData.getTitle());
-//        holder.place2.setText(apiData.getPlace());
-        //holder.time.setText("\u2022"+ Utils.DateToTimeFormat(apiData.getPublishedAt()));
-
         //8번
         String resource =list.get(position).getRv_img1();
         String title = list.get(position).getTitle();
         String place = list.get(position).getPlace();
 
-        Log.e("img","이미지 경로 확인: "+resource);
-        Log.e("img","이미지 경로 확인: "+title);
 
-
-
-       //Picasso.get().load(" http://www.culture.go.kr/upload/rdf/21/07/show_2021073014105366427.JPG").into(holder.poster);
-
-//        Glide.with(context)
-//                .asBitmap()
-//                .load(resource)
-//                .apply(new RequestOptions().override(100, 100)) //This is important
-//                .into(new BitmapImageViewTarget(holder.poster) {
-//                    @Override
-//                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-//                        super.onResourceReady(resource, transition);
-//                        holder.poster.setImageBitmap(resource);
-//                    }
-//                });
-
-        String imageUrl = "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory&fname=https://k.kakaocdn.net/dn/EShJF/btquPLT192D/SRxSvXqcWjHRTju3kHcOQK/img.png";
-        String imageUrl2 = " http://www.culture.go.kr/upload/rdf/21/03/rdf_2021033110325407198.jpg";
-        String imageUrl3 = "http://www.sejongpac.or.kr/upload/sjw/performance/20101111_48964791.jpg";
         Glide.with(holder.itemView.getContext())
-                .load(imageUrl2)
+                .load(resource)
                 .override(100,100)
                 .thumbnail(0.1f)
                 .timeout(6000)
@@ -243,14 +191,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MyViewHold
         //13번 데이터 메소드 만들기
         public void setData(String title, String place) {
 
-           // poster.setImageResource(resource);
-            //Glide.with(itemView.getContext()).load(" http://www.culture.go.kr/upload/rdf/20/12/rdf_202012311432049249.jpg ").into(poster);
-
-//            Glide.with(itemView.getContext())
-//                    .load(resource)
-//                    .override(70)
-//                    .thumbnail(0.1f)
-//                    .into(poster);
             title2.setText(title);
             place2.setText(place);
         }
