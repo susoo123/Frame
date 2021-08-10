@@ -20,30 +20,39 @@ public class SessionManager {
     public static final String NAME = "NAME";
     public static final String EMAIL = "EMAIL";
     public static final String ID = "ID";
+    public static final String PROFILE_IMG_PATH = "PROFILE_IMG_PATH";
+    public static final String ROLE = "ROLE";
 
     public SessionManager(Context context) {
         this.context = context;
         sharedPreferences = context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
-        editor = sharedPreferences.edit();
+        editor = sharedPreferences.edit(); //쉐어드 저장
     }
 
-    public void createSession(String name, String email){
-
+    public void createSession(String name, String email, String id, String profile_img , String role){
         editor.putBoolean(LOGIN, true);
         editor.putString(NAME, name);
         editor.putString(EMAIL, email);
-        //editor.putString(ID, id);
+        editor.putString(ID, id);
+        editor.putString(PROFILE_IMG_PATH, profile_img);
+        editor.putString(ROLE, role);
         editor.apply();
-
     }
 
-    public boolean isLoggin(){
+    public void updateSherd(String name){
+
+        editor.putString(NAME, name);
+        //editor.putString(PROFILE_IMG_PATH, profile_img);
+        editor.apply();
+    }
+
+    public boolean isLogin(){
         return sharedPreferences.getBoolean(LOGIN, false);
     }
 
     public void checkLogin(){
 
-        if (!this.isLoggin()){
+        if (!this.isLogin()){
             Intent i = new Intent(context, LoginActivity.class);
             context.startActivity(i);
             ((MainActivity) context).finish();
@@ -56,6 +65,8 @@ public class SessionManager {
         user.put(NAME, sharedPreferences.getString(NAME, null));
         user.put(EMAIL, sharedPreferences.getString(EMAIL, null));
         user.put(ID, sharedPreferences.getString(ID, null));
+        user.put(PROFILE_IMG_PATH, sharedPreferences.getString(PROFILE_IMG_PATH, null));
+        user.put(ROLE, sharedPreferences.getString(ROLE, null));
 
         return user;
     }

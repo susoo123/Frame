@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
     private Button btn_logout;
     SessionManager sessionManager;
 
+
     //바텀네비게이션 변수 초기화
     BottomNavigationView bottomNavigationView;
     Deque<Integer> integerDeque = new ArrayDeque<>(5);

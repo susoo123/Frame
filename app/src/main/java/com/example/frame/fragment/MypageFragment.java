@@ -13,8 +13,14 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.frame.EditProfileActivity;
 import com.example.frame.R;
+import com.example.frame.etc.SessionManager;
+
+import org.w3c.dom.Text;
+
+import java.util.HashMap;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -24,6 +30,8 @@ import com.example.frame.R;
 public class MypageFragment extends Fragment {
     TextView  btn_go_edit_profile;
     CardView mypage_img;
+    ImageView profile_img_iv;
+    TextView profile_name;
 
     public MypageFragment() {
         // Required empty public constructor
@@ -50,6 +58,20 @@ public class MypageFragment extends Fragment {
        View view = inflater.inflate(R.layout.fragment_mypage, container, false);
        btn_go_edit_profile = view.findViewById(R.id.btn_go_edit_profile);
        mypage_img = view.findViewById(R.id.mypage_img);
+       profile_img_iv = view.findViewById(R.id.profile_img_iv);
+       profile_name = view.findViewById(R.id.textView);
+
+        SessionManager sessionManager = new SessionManager(getContext());
+        HashMap<String,String> user = sessionManager.getUserDetail();
+        String profile_img = user.get(sessionManager.PROFILE_IMG_PATH);
+        String name = user.get(sessionManager.NAME);
+
+        Glide.with(getContext())
+                .load(profile_img)
+                .centerCrop()
+                .into(profile_img_iv);
+
+        profile_name.setText(name);
 
 
        View.OnClickListener clickListener = new View.OnClickListener() {

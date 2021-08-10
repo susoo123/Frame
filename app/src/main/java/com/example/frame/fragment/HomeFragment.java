@@ -86,9 +86,7 @@ public class HomeFragment extends Fragment {
         homePosterItemArrayList.add(new HomePosterItem(R.drawable.poster));
         homePosterItemArrayList.add(new HomePosterItem(R.drawable.app_logo));
 
-
         Handler handler = new Handler();
-
 
         //뷰페이저2에 어뎁터를 셋한다. 어떤 어댑터냐하면 선언해준 자바클래스 슬라이더 어댑터.
         viewPager2.setAdapter(new HomePosterAdapter(homePosterItemArrayList, viewPager2));

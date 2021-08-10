@@ -181,13 +181,17 @@ public class LoginActivity extends AppCompatActivity {
                            if(success.equals("1")){
                                for (int i = 0; i < jsonArray.length(); i++){
 
+                                   //여기서 로그인했을 때 유저 정보 통신으로 한번만 받아와서 쉐어드에 다 저장해두기
                                    JSONObject object = jsonArray.getJSONObject(i);
                                    String name = object.getString("name").trim();
                                    String email = object.getString("email").trim();
-                                   sessionManager.createSession(name,email);
-
-                                   Log.d("soo","로그인 json 데이터 email : "+email);
-                                   Log.d("soo","로그인 json 데이터  : "+jsonArray);
+                                   String id = object.getString("id").trim();
+                                   String profile_img = object.getString("profile_img").trim();
+                                   String role = object.getString("role").trim();
+                                   sessionManager.createSession(name,email,id,profile_img,role); //로그인 성공하면 쉐어드에 이름과 이메일을 저장해줌.
+//
+//                                   Log.d("soo","로그인 json 데이터 email : "+email);
+//                                   Log.d("soo","로그인 json 데이터  : "+jsonArray);
 
                                    Toast.makeText(LoginActivity.this,"로그인 성공", Toast.LENGTH_SHORT).show();
                                    loading.setVisibility(View.GONE);

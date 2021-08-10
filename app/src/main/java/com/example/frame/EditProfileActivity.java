@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -64,6 +65,7 @@ private TextView btn_edit_profile;
 private ImageButton btn_watching_photo;
 private static String URL_Edit_profile = "http://ec2-52-79-204-252.ap-northeast-2.compute.amazonaws.com/edit_profile.php";
 private static String URL_read_profile = "http://ec2-52-79-204-252.ap-northeast-2.compute.amazonaws.com/read_profile.php";
+//private static String URL_read_profile = "http://ec2-52-79-204-252.ap-northeast-2.compute.amazonaws.com/read_profile.php";
 
 SessionManager sessionManager;
 
@@ -71,6 +73,8 @@ private Bitmap bitmap;
 CircleImageView profile_image;
 ImageView photo;
 String encodeImageString;
+SharedPreferences sharedPreferences;
+    public SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +93,9 @@ String encodeImageString;
         btn_edit_profile =findViewById(R.id.btn_edit_profile);
 
 
+
+        //버튼 클릭 이벤트
+
         btn_edit_profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -96,6 +103,8 @@ String encodeImageString;
                 //upload_img();
             }
         });
+
+
 
         sessionManager = new SessionManager(this);
         HashMap<String,String> user = sessionManager.getUserDetail();
@@ -108,6 +117,35 @@ String encodeImageString;
 
         //이미지 업로드를 위해 갤러리로 가는 버튼?
         btn_watching_photo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Dexter.withContext(EditProfileActivity.this)
+                        .withPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
+                        .withListener(new PermissionListener() {
+                            @Override
+                            public void onPermissionGranted(PermissionGrantedResponse permissionGrantedResponse) {
+
+                                Intent intent = new Intent(Intent.ACTION_PICK);
+                                intent.setType("image/*");
+                                intent.setAction(Intent.ACTION_GET_CONTENT);
+                                launcher.launch(intent);
+                            }
+
+                            @Override
+                            public void onPermissionDenied(PermissionDeniedResponse permissionDeniedResponse) {
+
+                            }
+
+                            @Override
+                            public void onPermissionRationaleShouldBeShown(PermissionRequest permissionRequest, PermissionToken permissionToken) {
+                                permissionToken.continuePermissionRequest();
+                            }
+                        }).check();
+
+            }
+        });
+
+        photo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Dexter.withContext(EditProfileActivity.this)
@@ -156,6 +194,21 @@ String encodeImageString;
                                     String db_email = object.getString("email").trim();
                                     String db_birth = object.getString("birth").trim();
                                     String db_phone_num = object.getString("phone_num").trim();
+                                    String db_profile_img = object.getString("profile_img").trim();
+
+                                   // Log.e("soo","디비에서 온 이미지 경로 확인: " +db_profile_img);
+
+                                    sharedPreferences = getSharedPreferences("LOGIN", 0);
+                                    editor = sharedPreferences.edit();
+                                    editor.putString("PROFILE_IMG_PATH",db_profile_img);
+                                    editor.putString("NAME",db_name);
+                                    editor.commit();
+
+                                    Glide.with(EditProfileActivity.this)
+                                            .load(db_profile_img)
+                                            .centerCrop()
+                                            .into(photo);
+
 
                                     email.setText(db_email);
                                     email.setEnabled(false); //이메일 값 고정
@@ -163,9 +216,8 @@ String encodeImageString;
                                     name.setText(db_name);
                                     birth.setText(db_birth);
                                     phone_num.setText(db_phone_num);
-
-
                                 }
+
 
 
                             }else {
@@ -232,11 +284,11 @@ String encodeImageString;
                                 .into(photo);
 
                         try{
-
                             InputStream inputStream = getContentResolver().openInputStream(filepath);
                             bitmap = BitmapFactory.decodeStream(inputStream);
                             photo.setImageBitmap(bitmap);
                             encodeBitmapImage(bitmap);
+
                         }catch (Exception e){
 
                         }
@@ -258,7 +310,6 @@ String encodeImageString;
         byte[] bytesofimage = byteArrayOutputStream.toByteArray();
         encodeImageString = android.util.Base64.encodeToString(bytesofimage, Base64.DEFAULT);
 
-        Log.e("soo", "encodeImageString : " +encodeImageString);
     }
 
 
@@ -278,14 +329,38 @@ String encodeImageString;
                     @Override
                     public void onResponse(String response) {
                         try{
-
                             JSONObject jsonObject = new JSONObject(response);
-                            //제이슨으로 보내진 success 메세지 받음.
                             String success = jsonObject.getString("success");
-                            if(success.equals("1")){
-                                Toast.makeText(EditProfileActivity.this, "내 정보 수정 성공",Toast.LENGTH_SHORT).show();
+                            JSONArray jsonArray = jsonObject.getJSONArray("user_info");
 
+                            if(success.equals("1")){
+                                for (int i = 0; i < jsonArray.length(); i++){
+                                    JSONObject object = jsonArray.getJSONObject(i);
+
+                                    String db_name = object.getString("name").trim();
+                                    String db_profile_img = object.getString("profile_img").trim();
+
+                                    sharedPreferences = getSharedPreferences("LOGIN", 0);
+                                    editor = sharedPreferences.edit();
+                                    editor.putString("PROFILE_IMG_PATH",db_profile_img);
+                                    editor.putString("NAME",db_name);
+                                    editor.commit();
+
+                                    Toast.makeText(EditProfileActivity.this, "내 정보 수정 성공",Toast.LENGTH_SHORT).show();
+
+                                }
+
+                            }else {
+
+                                Log.d("soo","프로필 에러/ 프로필 읽어오지 못함.");
                             }
+//                            JSONObject jsonObject = new JSONObject(response);
+//                            //제이슨으로 보내진 success 메세지 받음.
+//                            String success = jsonObject.getString("success");
+//                            if(success.equals("1")){
+//                                Toast.makeText(EditProfileActivity.this, "내 정보 수정 성공",Toast.LENGTH_SHORT).show();
+//
+//                            }
 
                         } catch (JSONException e) {
 
