@@ -15,7 +15,7 @@ tools:context=".EditProfileActivity">
         android:layout_height="match_parent">
 
     <LinearLayout
-        android:paddingTop="60dp"
+        android:paddingTop="20dp"
         android:paddingLeft="30dp"
         android:paddingRight="30dp"
         android:layout_width="match_parent"
@@ -34,10 +34,10 @@ tools:context=".EditProfileActivity">
 
 <androidx.cardview.widget.CardView
     android:id="@+id/iv_profile_photo"
-    android:layout_width="100dp"
-    android:layout_height="100dp"
+    android:layout_width="120dp"
+    android:layout_height="120dp"
     android:layout_gravity="center"
-    app:cardCornerRadius="100dp"
+    app:cardCornerRadius="120dp"
     android:layout_marginBottom="30dp"
     >
 
@@ -45,24 +45,8 @@ tools:context=".EditProfileActivity">
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
-        <ImageButton
-            android:id="@+id/btn_photo_profile"
-            android:background="@color/white"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:src="@drawable/ic_baseline_add_24"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.771"
-            app:layout_constraintStart_toStartOf="@+id/imageView33"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="1.0" />
 
-<!--        <de.hdodenhof.circleimageview.CircleImageView-->
+        <!--        <de.hdodenhof.circleimageview.CircleImageView-->
 <!--            android:id="@+id/imageView3"-->
 <!--            app:layout_constraintEnd_toEndOf="parent"-->
 <!--            app:layout_constraintStart_toStartOf="parent"-->
@@ -71,10 +55,12 @@ tools:context=".EditProfileActivity">
 <!--            android:layout_width="100dp"-->
 <!--            android:layout_height="100dp"/>-->
 
+
+
         <ImageView
             android:id="@+id/imageView33"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
             android:layout_gravity="center"
             android:src="@drawable/app_logo"
             app:layout_constraintEnd_toEndOf="parent"
@@ -83,6 +69,16 @@ tools:context=".EditProfileActivity">
 
         </ImageView>
 
+        <ImageButton
+            android:id="@+id/btn_photo_profile"
+            android:layout_width="120dp"
+            android:layout_height="30dp"
+            android:layout_gravity="bottom|end"
+            android:background="@color/colorP"
+            android:src="@drawable/ic_baseline_add_24"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

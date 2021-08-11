@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.frame.EditProfileActivity;
@@ -73,27 +75,34 @@ public class MypageFragment extends Fragment {
 
         profile_name.setText(name);
 
-
-       View.OnClickListener clickListener = new View.OnClickListener() {
+        View.OnClickListener clickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 switch (v.getId()){
                     case R.id.mypage_img :
                     case R.id.btn_go_edit_profile :
                         startActivity(new Intent(getActivity(), EditProfileActivity.class));
+//                        FragmentTransaction ft = getFragmentManager().beginTransaction();
+//                        ft.detach(getParentFragment()).attach(getParentFragment()).commit();
                         break;
 
                 }
             }
         };
-
-       //버튼 클릭 이벤트
+        //버튼 클릭 이벤트
         mypage_img.setOnClickListener(clickListener);
         btn_go_edit_profile.setOnClickListener(clickListener);
+
 
         return view;
     }
 
+    @Override
+    public void onDetach() {
+        super.onDetach();
 
+
+        //Toast.makeText(getActivity(), "onDetach()", Toast.LENGTH_SHORT).show();
+    }
 
 }

@@ -44,7 +44,6 @@
         app:itemIconTint="@drawable/tab_item"
         app:itemTextColor="@drawable/tab_item"
         android:background="@drawable/tab_corners_shape"
-
         app:menu="@menu/menu">
 
     </com.google.android.material.bottomnavigation.BottomNavigationView>

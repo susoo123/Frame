@@ -47,32 +47,32 @@
             android:layout_toRightOf="@+id/rv_cv_image"
             android:text="전시회 제목"
             android:textColor="@color/black"
-            android:textSize="20sp">
+            android:textSize="18sp">
 
         </TextView>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:layout_marginLeft="75dp"
-            android:layout_marginTop="20dp"
-            android:layout_toRightOf="@+id/tv_title_search_rv"
-            android:text="찜하기"
-            android:textColor="@color/black"
-            android:textSize="12sp">
+<!--        <TextView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="30dp"-->
+<!--            android:layout_marginLeft="75dp"-->
+<!--            android:layout_marginTop="20dp"-->
+<!--            android:layout_toRightOf="@+id/tv_title_search_rv"-->
+<!--            android:text="찜하기"-->
+<!--            android:textColor="@color/black"-->
+<!--            android:textSize="12sp">-->
 
-        </TextView>
+<!--        </TextView>-->
 
         <TextView
             android:id="@+id/tv_place_search_rv"
-            android:layout_width="140dp"
+            android:layout_width="wrap_content"
             android:layout_height="30dp"
             android:layout_below="@+id/tv_title_search_rv"
             android:layout_marginLeft="20dp"
             android:layout_toRightOf="@+id/rv_cv_image"
             android:text="전시 장소"
             android:textColor="@color/black"
-            android:textSize="15sp">
+            android:textSize="12sp">
 
         </TextView>
 

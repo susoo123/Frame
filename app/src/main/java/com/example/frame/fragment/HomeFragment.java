@@ -82,9 +82,9 @@ public class HomeFragment extends Fragment {
 
         //드로어블로 부터 이미지 리스트 준비 [슬라이더 아이템]은 그냥 이름
         List<HomePosterItem> homePosterItemArrayList = new ArrayList<>();
-        homePosterItemArrayList.add(new HomePosterItem(R.drawable.app_logo)); //내가 뷰페이저2에 띄울 이미지들. 드로어블에 들어가 있어야함.
-        homePosterItemArrayList.add(new HomePosterItem(R.drawable.poster));
-        homePosterItemArrayList.add(new HomePosterItem(R.drawable.app_logo));
+        homePosterItemArrayList.add(new HomePosterItem(R.drawable.app_logo,"전시회 제목1","전시회 장소1")); //내가 뷰페이저2에 띄울 이미지들. 드로어블에 들어가 있어야함.
+        homePosterItemArrayList.add(new HomePosterItem(R.drawable.poster,"전시회 제목2","전시회 장소2"));
+        homePosterItemArrayList.add(new HomePosterItem(R.drawable.app_logo,"전시회 제목3","전시회 장소3"));
 
         Handler handler = new Handler();
 

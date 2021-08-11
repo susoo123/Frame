@@ -188,7 +188,6 @@ public class RegisterActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(String response) {
                         try{
-
                            JSONObject jsonObject = new JSONObject(response);
                             //제이슨으로 보내진 success 메세지 받음.
                             String success = jsonObject.getString("success");

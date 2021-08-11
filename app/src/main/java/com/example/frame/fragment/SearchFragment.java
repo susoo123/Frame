@@ -88,6 +88,7 @@ public class SearchFragment extends Fragment implements SearchAdapter.ItemClickL
         sendRequest();
         init_rv_search(view);
 
+        //검색 기능 관련
         search_view = view.findViewById(R.id.search_view);
         search_view.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override

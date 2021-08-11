@@ -6,6 +6,9 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.Manifest;
 import android.content.Intent;
@@ -34,6 +37,7 @@ import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.util.Util;
 import com.example.frame.etc.SessionManager;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 
 import org.json.JSONArray;
@@ -62,6 +66,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
 private TextInputEditText email,name,birth,phone_num;
 private TextView btn_edit_profile;
+//private FloatingActionButton btn_watching_photo;
 private ImageButton btn_watching_photo;
 private static String URL_Edit_profile = "http://ec2-52-79-204-252.ap-northeast-2.compute.amazonaws.com/edit_profile.php";
 private static String URL_read_profile = "http://ec2-52-79-204-252.ap-northeast-2.compute.amazonaws.com/read_profile.php";
@@ -109,10 +114,6 @@ SharedPreferences sharedPreferences;
         sessionManager = new SessionManager(this);
         HashMap<String,String> user = sessionManager.getUserDetail();
         String sEmail = user.get(sessionManager.EMAIL);
-        //Log.e("soo","쉐어드 확인: "+mEmail);
-
-        // Glide로 이미지 표시하기
-        //Glide.with(this).load().into(photo);
 
 
         //이미지 업로드를 위해 갤러리로 가는 버튼?
@@ -348,6 +349,7 @@ SharedPreferences sharedPreferences;
 
                                     Toast.makeText(EditProfileActivity.this, "내 정보 수정 성공",Toast.LENGTH_SHORT).show();
 
+                                    startActivity(new Intent(EditProfileActivity.this, MainActivity.class));
                                 }
 
                             }else {
@@ -403,6 +405,7 @@ SharedPreferences sharedPreferences;
 
 
     }
+
 
 
 

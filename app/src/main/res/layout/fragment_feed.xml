@@ -13,7 +13,7 @@
 
         <!-- 피드 들어가는 리사이클러뷰 -->
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/floatingActionButton"
+            android:id="@+id/btn_add_feed"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end|bottom"
@@ -25,16 +25,16 @@
             android:layout_alignParentBottom="true"
             android:src="@drawable/ic_baseline_add_24" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/frag3_rv"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_feed"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
 
-            android:background="#efefef"
-            android:scrollbarFadeDuration="0"
-            android:scrollbarSize="0dp"
-            android:scrollbarThumbVertical="@color/colorG"
-            android:scrollbars="vertical" />
+        android:background="#efefef"
+        android:scrollbarFadeDuration="0"
+        android:scrollbarSize="0dp"
+        android:scrollbarThumbVertical="@color/colorG"
+        android:scrollbars="vertical" />
 
 
 

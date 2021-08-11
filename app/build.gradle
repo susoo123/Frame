@@ -67,27 +67,23 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
 
 
-
-    //Glide 이미지 로드 라이브러리
-//    implementation 'com.github.bumptech.glide:glide:4.12.0'
-//    annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
-
-
-    implementation 'com.squareup.retrofit2:retrofit:2.7.2'
-    implementation 'com.squareup.retrofit2:converter-gson:2.6.2'
+//
+//    implementation 'com.squareup.retrofit2:retrofit:2.7.2'
+//    implementation 'com.squareup.retrofit2:converter-gson:2.6.2'
 
 
     //Times Formater
     implementation 'org.ocpsoft.prettytime:prettytime:4.0.1.Final'
-
-    //picasso 라이브러리
-    //implementation 'com.squareup.picasso:picasso:2.71828'
 
     //이미지 원모양으로
     implementation 'de.hdodenhof:circleimageview:3.1.0'
 
     //권한요청 라이브러리(안드로이드에서 퍼미션을 요청하는 다이얼 로그를 자동으로 띄워줌.)
     implementation 'com.karumi:dexter:6.2.3'
+
+    //프로필 이미지 설정할 때 카메라 or 갤러리
+    //implementation 'com.github.dhaval2404:imagepicker:2.1'
+
 
 
 }
