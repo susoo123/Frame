@@ -19,10 +19,9 @@
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/rv_home_poster_big_container"
-        android:background="@color/colorG"
         android:layout_width="match_parent"
         android:layout_marginTop="15dp"
-        android:layout_height="400dp" />
+        android:layout_height="510dp" />
 
 <!--    <TextView-->
 <!--        android:layout_marginLeft="10dp"-->
