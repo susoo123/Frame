@@ -11,6 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -41,17 +43,20 @@ import com.example.frame.etc.Utils;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MyViewHolder> {
+public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MyViewHolder> implements Filterable {
     //어댑터에 필요한 6가지
     //1.on createViewHolder 2. bindViewHolder 3. getItemCount() 4. viewholder 클래스 새로 설정 5.리스트 설정
     //6. 어댑터 생성자
 
 
     //5번.
-    private List<DataModel> list;
-    //private List<DataResult> list;
+    //private List<DataModel> list;
+    private ArrayList<DataModel> listFull;
+    private ArrayList<DataModel> list;
+
 //    private OnItemClickListener onItemClickListener;
     private ItemClickListener clickListener;
     private Activity activity;
@@ -70,10 +75,11 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MyViewHold
 //
 //    }
 
-    public SearchAdapter(List<DataModel> list, Activity activity,Context context){
-        this.list = list;
-        this.activity = activity;
+    public SearchAdapter( Context context, ArrayList<DataModel> list){
         this.context =context;
+        this.listFull = list;
+        this.list = new ArrayList<>(list);
+
 
     }
 
@@ -159,6 +165,47 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MyViewHold
 
     }
 
+    @Override
+    public Filter getFilter() {
+        return artFilter;
+    }
+
+    private final Filter artFilter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+
+            ArrayList<DataModel> filterList = new ArrayList<>();
+            if(constraint == null || constraint.length() ==0){
+                filterList.addAll(listFull);
+            }else {
+                String filterPattern = constraint.toString().toLowerCase().trim();
+                for(DataModel dataModel : listFull){
+                    if(dataModel.getTitle().toLowerCase().contains(filterPattern))
+                        filterList.add(dataModel);
+
+                    if(dataModel.getPlace().toLowerCase().contains(filterPattern))
+                        filterList.add(dataModel);
+                }
+
+            }
+
+            FilterResults results = new FilterResults();
+            results.values = filterList;
+            results.count =filterList.size();
+            return results;
+
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+
+            list.clear();;
+            list.addAll((ArrayList) results.values);
+            notifyDataSetChanged();
+
+
+        }
+    };
 
 
     //4번 RecyclerView.ViewHolder를 상속받아야함.

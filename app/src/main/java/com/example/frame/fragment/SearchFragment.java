@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.SearchView;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -16,6 +17,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 
 
 import com.android.volley.AuthFailureError;
@@ -41,8 +44,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class SearchFragment extends Fragment implements SearchAdapter.ItemClickListener{
+public class SearchFragment extends Fragment implements SearchAdapter.ItemClickListener {
     private ArrayList<DataModel> list = new ArrayList<>();
+
     private static String URL_api = "http://ec2-52-79-204-252.ap-northeast-2.compute.amazonaws.com/apiService.php";
     String art_title;
     String art_place;
@@ -50,6 +54,7 @@ public class SearchFragment extends Fragment implements SearchAdapter.ItemClickL
     SearchAdapter adapter;
     RecyclerView recyclerView;
     CardView item_searchFrag;
+    SearchView search_view;
 
     public SearchFragment() {
         // Required empty public constructor
@@ -80,9 +85,26 @@ public class SearchFragment extends Fragment implements SearchAdapter.ItemClickL
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_search, container, false);
 
+        sendRequest();
+        init_rv_search(view);
 
-       sendRequest();
-       init_rv_search(view);
+        search_view = view.findViewById(R.id.search_view);
+        search_view.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+
+                adapter.getFilter().filter(newText);
+                return false;
+            }
+        });
+
+
+
 
         return view;
     }
@@ -141,7 +163,7 @@ public class SearchFragment extends Fragment implements SearchAdapter.ItemClickL
                             }
 
 
-                            adapter = new SearchAdapter(list,getActivity(),getContext());
+                            adapter = new SearchAdapter(getContext(),list);
                             recyclerView.setAdapter(adapter);
                             adapter.notifyDataSetChanged();
 
@@ -178,5 +200,6 @@ public class SearchFragment extends Fragment implements SearchAdapter.ItemClickL
         AppHelper.requestQueue.add(request);
 
     }
+
 
 }
