@@ -18,10 +18,12 @@ public class DataFeed {
 //private ArrayList<String> formats;// 전체 포맷 어레이
 
 
-    public DataFeed(String writer,String contents,String feed_img ) {
+    public DataFeed(String writer,String contents,String feed_img, String date, String userImg ) {
         this.writer = writer;
         this.contents = contents;
         this.feed_img = feed_img;
+        this.date = date;
+        this.userImg = userImg;
 
     }
 

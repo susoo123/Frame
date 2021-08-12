@@ -25,13 +25,18 @@ import com.example.frame.adapter.SearchAdapter;
 import com.example.frame.etc.AppHelper;
 import com.example.frame.etc.DataFeed;
 import com.example.frame.etc.DataModel;
+import com.example.frame.etc.Utils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,7 +47,7 @@ public class FeedFragment extends Fragment {
    private static String URL_read_feed = "http://ec2-52-79-204-252.ap-northeast-2.compute.amazonaws.com/read_feed.php";
    private FloatingActionButton btn_add_feed;
    RecyclerView recyclerView;
-   private String feed_writer, feed_contents, feed_img, feed_profile_img, feed_id, feed_user_id;
+   private String feed_writer, feed_contents, feed_img, feed_time, feed_profile_img, feed_id, feed_user_id;
    RecyclerView.Adapter adapter;
    private ArrayList<DataFeed> feedList = new ArrayList<>();
 
@@ -118,19 +123,25 @@ public class FeedFragment extends Fragment {
                             String success = jsonObject.getString("success");
                             JSONArray jsonArray = jsonObject.getJSONArray("feed");
 
-                            //JSONArray jsonArray = jsonObject.getJSONArray("profile");
-                            Log.d("soo", "php에서 json으로 받은 Array 값: " + jsonArray);
 
                             for (int i = 0; i < jsonArray.length(); i++) {
                                 JSONObject object = jsonArray.getJSONObject(i);
-                                feed_writer = object.getString("feed_date");
+                                feed_writer = object.getString("name");
                                 feed_contents = object.getString("feed_contents");
                                 feed_img = object.getString("feed_img");
+                                feed_time = object.getString("feed_date");
+                                feed_profile_img = object.getString("profile_img");
 
                                 Log.d("soo", "php에서 json으로 받은 array 값: " + jsonArray);
 
+                                SimpleDateFormat fm = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-                                feedList.add(new DataFeed(feed_writer,feed_contents,feed_img));
+                                Date date = fm.parse(feed_time);
+                                Log.d("soo", "date 값: " + date);
+                                beforeTime(date);
+                                Log.d("soo", "beforeTime 값: " +  beforeTime(date));
+
+                                feedList.add(new DataFeed(feed_writer,feed_contents,feed_img,beforeTime(date),feed_profile_img));
                             }
 
 
@@ -138,7 +149,7 @@ public class FeedFragment extends Fragment {
                             recyclerView.setAdapter(adapter);
                             adapter.notifyDataSetChanged();
 
-                        } catch (JSONException e) {
+                        } catch (JSONException | ParseException e) {
                             e.printStackTrace();
                         }
 
@@ -169,6 +180,47 @@ public class FeedFragment extends Fragment {
         request.setShouldCache(false);
         AppHelper.requestQueue = Volley.newRequestQueue(getContext()); // requestQueue 초기화 필수
         AppHelper.requestQueue.add(request);
+
+    }
+
+
+    //몇 분 전 으로 시간 표시해주는 메서드
+    public String beforeTime(Date date){
+
+        Calendar c = Calendar.getInstance();
+
+        long now = c.getTimeInMillis(); //현재 시각을 미리 세컨드로 바꾼다.
+        long dateM = date.getTime(); // 해당 날짜의 시각을 가져온다.
+        long gap = now - dateM; // 현재 시각 - 해당 날짜 시각
+
+
+        String ret = "";
+
+//        초       분   시
+//        1000    60  60
+        gap = (long)(gap/1000); // 밀리세컨이라서
+        long hour = gap/3600; // 밀리세컨 제거한 시각/3600(3600= 1시간을 초로 나타낸것)
+        gap = gap%3600; // 3600으로 나누고 난 나머지
+
+        long min = gap/60; // 1분이 60초
+        long sec = gap%60; // 초는 60(1분이 60초라서)으로 나누고 난 후 나머지는 모두 초!!
+
+        if(hour > 24){ // 시가 24보다 크면 (하루 지나면)
+            ret = new SimpleDateFormat("HH:mm").format(date);
+        }
+        else if(hour > 0){ //시가 0보다 크면 (즉 시(hour)가 존재한다는 의미 )
+            ret = hour+"시간 전";
+        }
+        else if(min > 0){
+            ret = min+"분 전";
+        }
+        else if(sec > 0){
+            ret = "방금";
+        }
+        else{
+            ret = new SimpleDateFormat("HH:mm").format(date);
+        }
+        return ret;
 
     }
 }

@@ -48,12 +48,13 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
         String contents =feedList.get(position).getContents();
         String writer = feedList.get(position).getWriter();
         String feed_img = feedList.get(position).getFeed_img();
+        String feed_time = feedList.get(position).getDate();
+        String user_img = feedList.get(position).getUserImg();
 
         Glide.with(holder.itemView.getContext())
                 .load(feed_img)
-                .override(100,100)
+                .override(800)
                 .thumbnail(0.1f)
-                .timeout(6000)
                 .error(R.drawable.app_logo)
                 .listener(new RequestListener<Drawable>() {
                     @Override
@@ -67,8 +68,26 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
                     }
                 }).into(holder.item_feed_image);
 
+        Glide.with(holder.itemView.getContext())
+                .load(user_img)
+                .override(100,100)
+                .thumbnail(0.1f)
+                .centerCrop()
+                .error(R.drawable.app_logo)
+                .listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        return false;
+                    }
+                }).into(holder.item_feed_profile_image);
+
         //9번
-        holder.setData(contents,writer);
+        holder.setData(contents,writer,feed_time);
 
 
 
@@ -80,21 +99,24 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        ImageView item_feed_image;
-        TextView item_feed_contents,item_feed_username;
+        ImageView item_feed_image,item_feed_profile_image;
+        TextView item_feed_contents,item_feed_username,item_feed_time ;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             item_feed_image = itemView.findViewById(R.id.item_feed_image);
             item_feed_contents = itemView.findViewById(R.id.item_feed_contents);
             item_feed_username = itemView.findViewById(R.id.item_feed_username);
+            item_feed_time = itemView.findViewById(R.id.feed_time);
+            item_feed_profile_image = itemView.findViewById(R.id.item_feed_profile_image);
 
         }
 
-        public void setData(String contents, String username) {
+        public void setData(String contents, String username, String time) {
 
             item_feed_contents.setText(contents);
             item_feed_username.setText(username);
+            item_feed_time.setText(time);
         }
 
     }

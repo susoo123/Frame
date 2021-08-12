@@ -17,19 +17,20 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <ImageView
                 android:id="@+id/img"
-                android:transitionName="img"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
-                android:scaleType="centerCrop"/>
+                android:scaleType="centerCrop"
+                android:transitionName="img" />
 
             <ImageView
                 android:id="@+id/shadow_bottom"
-                android:src="@drawable/bottom_shadow"
-                android:layout_alignBottom="@+id/img"
                 android:layout_width="match_parent"
-                android:layout_height="80dp"/>
+                android:layout_height="80dp"
+                android:layout_alignBottom="@+id/img"
+                android:src="@drawable/bottom_shadow" />
 
             <ProgressBar
                 android:id="@+id/progress_load_photo"
@@ -110,21 +111,22 @@
                 android:layout_marginTop="5dp"
                 android:text="Desc"
                 />
+
             <TextView
                 android:id="@+id/source"
                 android:layout_width="wrap_content"
                 android:layout_height="20dp"
                 android:layout_below="@+id/desc"
-                android:layout_marginTop="10dp"
                 android:layout_marginLeft="16dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
-                android:textStyle="bold"
-                android:textColor="@color/colorG"
-                android:maxLines="1"
                 android:drawablePadding="10dp"
-                android:singleLine="true"
                 android:ellipsize="end"
-                android:text="Source"/>
+                android:maxLines="1"
+                android:singleLine="true"
+                android:text="Source"
+                android:textColor="@color/colorG"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/time"
