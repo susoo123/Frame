@@ -12,12 +12,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.android.volley.AuthFailureError;
+//import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
+//import com.android.volley.VolleyError;
+//import com.android.volley.toolbox.StringRequest;
+import com.android.volley.error.AuthFailureError;
+import com.android.volley.error.VolleyError;
+import com.android.volley.request.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.frame.AddFeedActivity;
+import com.example.frame.AddFeedActivity2;
 import com.example.frame.EditProfileActivity;
 import com.example.frame.R;
 import com.example.frame.adapter.FeedAdapter;
@@ -86,7 +90,8 @@ public class FeedFragment extends Fragment {
             public void onClick(View v) {
                 switch (v.getId()){
                     case R.id.btn_add_feed :
-                        startActivity(new Intent(getActivity(), AddFeedActivity.class));
+//                        startActivity(new Intent(getActivity(), AddFeedActivity.class));
+                        startActivity(new Intent(getActivity(), AddFeedActivity2.class));
                         break;
 
                 }

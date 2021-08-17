@@ -21,11 +21,14 @@ import android.widget.Filter;
 import android.widget.Filterable;
 
 
-import com.android.volley.AuthFailureError;
+//import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
+//import com.android.volley.VolleyError;
+//import com.android.volley.toolbox.StringRequest;
+import com.android.volley.error.AuthFailureError;
+import com.android.volley.error.VolleyError;
+import com.android.volley.request.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import com.example.frame.R;
