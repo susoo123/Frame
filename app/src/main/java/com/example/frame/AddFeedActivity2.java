@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -25,9 +26,11 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -39,6 +42,7 @@ import com.android.volley.request.SimpleMultiPartRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.frame.adapter.AddFeedImgAdapter;
 import com.example.frame.etc.SessionManager;
+import com.google.android.material.snackbar.Snackbar;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionDeniedResponse;
@@ -73,6 +77,8 @@ public class AddFeedActivity2 extends AppCompatActivity {
     ProgressDialog progressDialog;
     private  ArrayList<Uri> uriList = new ArrayList<>();
     ArrayList<String> mainPathList = new ArrayList<String>();
+    private String feed_uid;
+
 
 
     @Override
@@ -244,6 +250,7 @@ public class AddFeedActivity2 extends AppCompatActivity {
         HashMap<String,String> user = sessionManager.getUserDetail();
         String user_id = user.get(sessionManager.ID);
         final String contents = this.feed_contents.getText().toString().trim();
+        feed_uid = createCode();
 
 
         SimpleMultiPartRequest smpr = new SimpleMultiPartRequest(Request.Method.POST, url, new Response.Listener<String>() {
@@ -282,6 +289,7 @@ public class AddFeedActivity2 extends AppCompatActivity {
         //데이터 추가
         smpr.addStringParam("user_id", user_id);
         smpr.addStringParam("contents", contents);
+        smpr.addStringParam("feed_uid", feed_uid);
         smpr.addStringParam("cntImage", String.valueOf(feedImgArrayList.size()));
 
 
@@ -298,17 +306,35 @@ public class AddFeedActivity2 extends AppCompatActivity {
     }
 
 
+    @Override
+    public boolean onContextItemSelected(@NonNull MenuItem item) {
 
 
+        switch(item.getItemId()){
+//            case 101:
+//                Snackbar.make(findViewById(R.id.rootId),"Add to wishlist",Snackbar.LENGTH_LONG).show();
+//                return true;
+            case 102:
+                Snackbar.make(findViewById(R.id.rootId),"삭제",Snackbar.LENGTH_LONG).show();
+                adapter.RemoveItem(item.getGroupId());
+            return true;
 
+        }
 
+        return super.onContextItemSelected(item);
 
+    }
 
+    private String createCode() { //이메일 인증코드 생성
+        String[] str = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s",
+                "t", "u", "v", "w", "x", "y", "z", "1", "2", "3", "4", "5", "6", "7", "8", "9","!","@","#","$"};
+        String newCode = new String();
 
+        for (int x = 0; x < 8; x++) {
+            int random = (int) (Math.random() * str.length);
+            newCode += str[random];
+        }
 
-
-
-
-
-
+        return newCode;
+    }
 }

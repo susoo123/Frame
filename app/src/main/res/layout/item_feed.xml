@@ -69,14 +69,23 @@
             android:src="@drawable/ic_baseline_menu_dot"/>
     </LinearLayout>
 
-    <ImageView
-        android:id="@+id/item_feed_image"
+<!--    <ImageView-->
+<!--        android:id="@+id/item_feed_image"-->
+<!--        android:layout_marginTop="10dp"-->
+<!--        android:layout_marginHorizontal="15dp"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="250dp"-->
+<!--        android:scaleType="fitXY"-->
+<!--        android:src="@color/colorG" />-->
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/item_feed_image_rv"
         android:layout_marginTop="10dp"
         android:layout_marginHorizontal="15dp"
         android:layout_width="match_parent"
         android:layout_height="250dp"
         android:scaleType="fitXY"
-        android:src="@color/colorG" />
+        android:background="@color/colorG"/>
 
     <TextView
         android:id="@+id/item_feed_contents"

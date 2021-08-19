@@ -3,6 +3,7 @@ package com.example.frame.adapter;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -62,13 +64,16 @@ public class AddFeedImgAdapter extends RecyclerView.Adapter<AddFeedImgAdapter.My
        return arrayListFeedImg.size();
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
+    public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener{
         ImageView item_feed_img;
+        CardView cardView;
 
        //아이템 xml에 만들어둔 컴포넌트 연결
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             item_feed_img = itemView.findViewById(R.id.item_feed_img);
+            cardView = itemView.findViewById(R.id.cardView3);
+            cardView.setOnCreateContextMenuListener(this);
         }
 
         public void setData(String feed_img) {
@@ -90,8 +95,24 @@ public class AddFeedImgAdapter extends RecyclerView.Adapter<AddFeedImgAdapter.My
                             return false;
                         }
                     }).into(item_feed_img);
+
         }
 
 
+        @Override
+        public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+
+            menu.add(getAdapterPosition(),102,1,"삭제");
+
+        }
+    }
+
+    public void RemoveItem(int position){
+
+        arrayListFeedImg.remove(position);
+        notifyDataSetChanged();
     }
 }
+
+//  menu.setHeaderTitle("Select Any One");
+//            menu.add(getAdapterPosition(),101,0,"Add to wishlist");

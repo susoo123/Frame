@@ -20,16 +20,13 @@ import com.android.volley.error.AuthFailureError;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.frame.AddFeedActivity;
 import com.example.frame.AddFeedActivity2;
-import com.example.frame.EditProfileActivity;
+import com.example.frame.DetailFeedActivity;
 import com.example.frame.R;
 import com.example.frame.adapter.FeedAdapter;
-import com.example.frame.adapter.SearchAdapter;
 import com.example.frame.etc.AppHelper;
 import com.example.frame.etc.DataFeed;
-import com.example.frame.etc.DataModel;
-import com.example.frame.etc.Utils;
+import com.example.frame.etc.DataFeedImg;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.json.JSONArray;
@@ -54,6 +51,14 @@ public class FeedFragment extends Fragment {
    private String feed_writer, feed_contents, feed_img, feed_time, feed_profile_img, feed_id, feed_user_id;
    RecyclerView.Adapter adapter;
    private ArrayList<DataFeed> feedList = new ArrayList<>();
+   private JSONArray imagejArray = new JSONArray();
+   private ArrayList<DataFeedImg> imgDataArray;
+
+
+
+    //리사이클러뷰 클릭 이벤트 - 7.어댑터 올릴 액티비티나 프래그먼트로 가서 어댑터 선언한 곳에 listener 넣기
+    private FeedAdapter.RecyclerViewClickListener clickListener;
+
 
 
 
@@ -85,6 +90,7 @@ public class FeedFragment extends Fragment {
 
 
 
+
         View.OnClickListener clickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -93,6 +99,7 @@ public class FeedFragment extends Fragment {
 //                        startActivity(new Intent(getActivity(), AddFeedActivity.class));
                         startActivity(new Intent(getActivity(), AddFeedActivity2.class));
                         break;
+
 
                 }
             }
@@ -133,11 +140,26 @@ public class FeedFragment extends Fragment {
                                 JSONObject object = jsonArray.getJSONObject(i);
                                 feed_writer = object.getString("name");
                                 feed_contents = object.getString("feed_contents");
-                                feed_img = object.getString("feed_img");
+
+                                //feed_img = object.getString("imageArray");
+                                imagejArray = object.getJSONArray("imageArray");
+
+                                if(imagejArray !=null){
+                                    imgDataArray = new ArrayList<>();
+                                    for (int j = 0; j < imagejArray.length(); j++){
+                                       // imgDataArray.add(imagejArray.getString(j));
+                                        imgDataArray.add(new DataFeedImg(imagejArray.getString(j)));
+                                    }
+
+                                }
+
+
                                 feed_time = object.getString("feed_date");
                                 feed_profile_img = object.getString("profile_img");
 
                                 Log.d("soo", "php에서 json으로 받은 array 값: " + jsonArray);
+                                Log.d("soo", "php에서 json으로 받은 imageArray 값: " + imagejArray);
+                                Log.d("soo", "imgDataArray 값: " + imgDataArray);
 
                                 SimpleDateFormat fm = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
@@ -146,11 +168,13 @@ public class FeedFragment extends Fragment {
                                 beforeTime(date);
                                 Log.d("soo", "beforeTime 값: " +  beforeTime(date));
 
-                                feedList.add(new DataFeed(feed_writer,feed_contents,feed_img,beforeTime(date),feed_profile_img));
+                                feedList.add(new DataFeed(feed_writer,feed_contents,imgDataArray,beforeTime(date),feed_profile_img));
                             }
 
 
-                            adapter = new FeedAdapter(getContext(),feedList);
+                            //리사이클러뷰 클릭 이벤트 - 6. onClick메소드 내에 리스너 set
+                            setOnClickListener();
+                            adapter = new FeedAdapter(getContext(),feedList,clickListener);
                             recyclerView.setAdapter(adapter);
                             adapter.notifyDataSetChanged();
 
@@ -188,6 +212,18 @@ public class FeedFragment extends Fragment {
 
     }
 
+    //리사이클러뷰 클릭 이벤트 - 8. 프래그먼트에서 사용할 클릭리스너 메소드 만들기
+    private void setOnClickListener() {
+        clickListener = new FeedAdapter.RecyclerViewClickListener() {
+            @Override
+            public void onClick(View v, int position) {
+                Intent intent = new Intent(getActivity(), DetailFeedActivity.class);
+                intent.putExtra("userName",feedList.get(position).getWriter());
+                startActivity(intent);
+            }
+        };
+    }
+
 
     //몇 분 전 으로 시간 표시해주는 메서드
     public String beforeTime(Date date){
@@ -211,7 +247,7 @@ public class FeedFragment extends Fragment {
         long sec = gap%60; // 초는 60(1분이 60초라서)으로 나누고 난 후 나머지는 모두 초!!
 
         if(hour > 24){ // 시가 24보다 크면 (하루 지나면)
-            ret = new SimpleDateFormat("HH:mm").format(date);
+            ret = new SimpleDateFormat("MM월dd일 HH:mm").format(date);
         }
         else if(hour > 0){ //시가 0보다 크면 (즉 시(hour)가 존재한다는 의미 )
             ret = hour+"시간 전";

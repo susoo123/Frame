@@ -2,14 +2,20 @@ package com.example.frame.etc;
 
 import android.net.Uri;
 
-public class DataFeedImg {
-    private Uri feedImg;
+import java.util.ArrayList;
 
-    public DataFeedImg(Uri feedImg) {
+public class DataFeedImg {
+    private String feedImg;
+
+    public DataFeedImg(String feedImg) {
         this.feedImg = feedImg;
     }
 
-    public Uri getFeedImg() {
+    public String getFeedImg() {
         return feedImg;
+    }
+
+    public void setFeedImg(String feedImg) {
+        this.feedImg = feedImg;
     }
 }
