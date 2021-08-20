@@ -63,7 +63,7 @@
             android:id="@+id/btn_feed_option_container"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_marginLeft="150dp"
+            android:layout_marginLeft="170dp"
             android:background="@color/white"
             app:menu="@menu/menu_feed"
             android:src="@drawable/ic_baseline_menu_dot"/>
@@ -91,8 +91,9 @@
         android:id="@+id/item_feed_contents"
         android:layout_marginTop="10dp"
         android:layout_marginHorizontal="15dp"
+        android:layout_marginBottom="10dp"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="180dp"
         android:textSize="13sp"
         android:text="텍스트 내용"/>
 

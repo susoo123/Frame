@@ -1,21 +1,48 @@
 package com.example.frame.etc;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class DataFeed {
+public class DataFeed implements Serializable {
 
     //private String title;
     private String writer;
+    private String feed_user_id;
     //private ArrayList<String> contents;
     private String contents;
+    private boolean isChecked = false;
+
+    public boolean isChecked() {
+        return isChecked;
+    }
+
+    public void setChecked(boolean checked) {
+        isChecked = checked;
+    }
+
+    public String getFeed_user_id() {
+        return feed_user_id;
+    }
+
+    public void setFeed_user_id(String feed_user_id) {
+        this.feed_user_id = feed_user_id;
+    }
+
     private String date;
     private String feed_id;
     private String feed_img;
 
     private String userImg;
+    private String feed_uid;
 
+    public String getFeed_uid() {
+        return feed_uid;
+    }
 
+    public void setFeed_uid(String feed_uid) {
+        this.feed_uid = feed_uid;
+    }
 
     private String user_id;
     private ArrayList<String> images;
@@ -37,12 +64,14 @@ public class DataFeed {
 
     }
 
-    public DataFeed(String writer,String contents,ArrayList<DataFeedImg> dataFeedImgList, String date, String userImg ) {
+    public DataFeed(String writer,String contents,ArrayList<DataFeedImg> dataFeedImgList, String date, String userImg, String feed_user_id,String feed_uid) {
         this.writer = writer;
         this.contents = contents;
         this.dataFeedImgList = dataFeedImgList;
         this.date = date;
         this.userImg = userImg;
+        this.feed_user_id = feed_user_id;
+        this.feed_uid = feed_uid;
 
     }
 

@@ -121,6 +121,8 @@ public class SearchFragment extends Fragment implements SearchAdapter.ItemClickL
         recyclerView.setLayoutManager(layoutManager);
         //recyclerView.setItemAnimator(new DefaultItemAnimator());
         //recyclerView.setNestedScrollingEnabled(false);
+//        adapter = new SearchAdapter(getContext(),list);
+//        recyclerView.setAdapter(adapter);
 
     }
 

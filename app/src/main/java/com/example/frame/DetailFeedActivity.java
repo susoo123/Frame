@@ -85,6 +85,7 @@ public class DetailFeedActivity extends AppCompatActivity {
 
                             dialog.show();
                             Toast.makeText(DetailFeedActivity.this, "피드를 삭제했습니다.", Toast.LENGTH_SHORT).show();
+
                         }
                         return false;
                     }

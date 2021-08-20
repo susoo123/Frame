@@ -98,7 +98,6 @@ public class AddFeedActivity2 extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                Log.d("soo","pathList 확인 : " + feedImgArrayList.size());
                 sendImages();
 
             }
@@ -176,11 +175,11 @@ public class AddFeedActivity2 extends AppCompatActivity {
                             ClipData clipData = data.getClipData();
                             Log.d("soo", "여러개 사진 선택 : " + String.valueOf(clipData.getItemCount()));
 
-                            if (clipData.getItemCount() > 10) {//사진을 11장 이상인 경우
+                            if (clipData.getItemCount() > 5) {//사진을 5장 이상인 경우
 
-                                Toast.makeText(getApplicationContext(), "사진은 10장까지 선택 가능합니다.", Toast.LENGTH_LONG).show();
+                                Toast.makeText(getApplicationContext(), "사진은 5장까지 선택 가능합니다.", Toast.LENGTH_LONG).show();
 
-                            } else {//선택한 사진이 1장 이상 10장 이하인경우
+                            } else {//선택한 사진이 1장 이상 5장 이하인경우
                                 Log.d("soo", "멀티 사진 선택 모드");
 
                                 for (int i = 0; i < clipData.getItemCount(); i++) {
@@ -191,8 +190,10 @@ public class AddFeedActivity2 extends AppCompatActivity {
                                         //uri 를  list 에 담는다
                                         uriList.add(imageUri);
                                         Log.d("soo", "uri 확인" + imageUri);
+
                                         String path = getPathFromUri(imageUri);
                                         Log.d("soo", "path 확인 : " + path);
+
                                         feedImgArrayList.add(path);
                                         Log.d("soo", "pathList size 확인 : " + feedImgArrayList.size());
 
@@ -217,26 +218,18 @@ public class AddFeedActivity2 extends AppCompatActivity {
 
 
 
-    //이미지 인코딩
-    private void encodeBitmapImage(Bitmap bitmap) {
-
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG,100,byteArrayOutputStream);
-
-        byte[] bytesofimage = byteArrayOutputStream.toByteArray();
-        encodeImageString = Base64.encodeToString(bytesofimage, Base64.DEFAULT);
-
-    }
 
 
+
+    //이미지 경로 가져오기(내부저장소에서 저장된 데이터 가져올때)
     public String getPathFromUri(Uri uri){
 
+        //ContentResolver = content provider의 주소를 통해 데이터에 접근해 결과값을 가져옴.
+        //content provider 는 어플리케이션 사이에서 data를 공유하는 통로역할을 함.
+        //content provider가 안드로이드 시스템의 각종 설정값이나 디비에 접근하게 해준다면 반환하는 브릿지 역할은 content Resolver가 하게됨.
         Cursor cursor = getContentResolver().query(uri, null, null, null, null );
-
         cursor.moveToNext();
-
         String path = cursor.getString( cursor.getColumnIndex( "_data" ) );
-
         cursor.close();
 
         return path;
@@ -246,11 +239,14 @@ public class AddFeedActivity2 extends AppCompatActivity {
 
     public void sendImages(){
         String url = "http://ec2-52-79-204-252.ap-northeast-2.compute.amazonaws.com/create_feed3.php";
+
+
         sessionManager = new SessionManager(this);
         HashMap<String,String> user = sessionManager.getUserDetail();
-        String user_id = user.get(sessionManager.ID);
-        final String contents = this.feed_contents.getText().toString().trim();
-        feed_uid = createCode();
+        String user_id = user.get(sessionManager.ID);//로그인 한 사용자 id 가져오기(쉐어드에서)
+
+        final String contents = this.feed_contents.getText().toString().trim();//적힌 피드 내용
+        feed_uid = createCode(); //feed_uid를 생성함.
 
 
         SimpleMultiPartRequest smpr = new SimpleMultiPartRequest(Request.Method.POST, url, new Response.Listener<String>() {
@@ -260,8 +256,6 @@ public class AddFeedActivity2 extends AppCompatActivity {
                 try {
 
                     JSONObject jsonObject = new JSONObject(response);
-                    Log.d("soo", "다중 사진 전송 후 json 확인 "+ String.valueOf(jsonObject));
-
                     String post = jsonObject.getString("upload");
 
                     if(post.equals("1")){
@@ -284,39 +278,40 @@ public class AddFeedActivity2 extends AppCompatActivity {
             public void onErrorResponse(VolleyError error) {
                 Log.d("soo", "전송 실패!!");
             }
-        });
+        }); //SimpleMultiPartRequest 끝.
+
 
         //데이터 추가
-        smpr.addStringParam("user_id", user_id);
-        smpr.addStringParam("contents", contents);
-        smpr.addStringParam("feed_uid", feed_uid);
-        smpr.addStringParam("cntImage", String.valueOf(feedImgArrayList.size()));
+        smpr.addStringParam("user_id", user_id); //쉐어드에서 가져온 로그인한 사용자 id
+        smpr.addStringParam("contents", contents); //피드에 적힐 내용
+        smpr.addStringParam("feed_uid", feed_uid); //피드 고유번호
+        smpr.addStringParam("cntImage", String.valueOf(feedImgArrayList.size()));//이미지 개수 보내기
 
 
         //이미지 파일 추가
-        if(feedImgArrayList.size() > 0 ){
+        if(feedImgArrayList.size() > 0 ){ //이미지가 추가되면
             for(int i = 0; i < feedImgArrayList.size(); i++){
-                smpr.addFile("image" + i, feedImgArrayList.get(i));
+                smpr.addFile("image" + i, feedImgArrayList.get(i)); //파일에 이미지들을 추가함.
                 Log.d("soo","전송 후 path 확인 : " + feedImgArrayList.get(i));
             }
         }
 
+        //사용자가 request 객체에 요청 내용 담아 RequestQueue에 추가하면,
+        //RequestQueue가 알아서 쓰레드 생성해 서버에 요청을 보내고 응답 받음.
+        //응답오면 RequestQueue에서 Request에 등록된 ResponseListener로 응답을 전달해줌.
+        //volley장점: 사용자가 별도의 쓰레드 관리나 UI접근을 위한 핸들러를 다룰 필요가 없음.
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(smpr);
     }
 
 
+    //특정 이미지 선택하고, 삭제가능하도록
     @Override
     public boolean onContextItemSelected(@NonNull MenuItem item) {
-
-
         switch(item.getItemId()){
-//            case 101:
-//                Snackbar.make(findViewById(R.id.rootId),"Add to wishlist",Snackbar.LENGTH_LONG).show();
-//                return true;
             case 102:
                 Snackbar.make(findViewById(R.id.rootId),"삭제",Snackbar.LENGTH_LONG).show();
-                adapter.RemoveItem(item.getGroupId());
+                adapter.RemoveItem(item.getGroupId()); //어댑터에서 이미지가 저장된 아이템이 제거됨.
             return true;
 
         }
@@ -325,7 +320,8 @@ public class AddFeedActivity2 extends AppCompatActivity {
 
     }
 
-    private String createCode() { //이메일 인증코드 생성
+    //해당 피드 고유 코드 만들기 (feed_uid에 저장됨)
+    private String createCode() {
         String[] str = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s",
                 "t", "u", "v", "w", "x", "y", "z", "1", "2", "3", "4", "5", "6", "7", "8", "9","!","@","#","$"};
         String newCode = new String();
@@ -337,4 +333,18 @@ public class AddFeedActivity2 extends AppCompatActivity {
 
         return newCode;
     }
+
+
+    //이미지 인코딩
+    private void encodeBitmapImage(Bitmap bitmap) {
+
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG,100,byteArrayOutputStream);
+
+        byte[] bytesofimage = byteArrayOutputStream.toByteArray();
+        encodeImageString = Base64.encodeToString(bytesofimage, Base64.DEFAULT);
+
+    }
+
+
 }

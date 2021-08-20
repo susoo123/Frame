@@ -48,7 +48,7 @@ public class FeedFragment extends Fragment {
    private static String URL_read_feed = "http://ec2-52-79-204-252.ap-northeast-2.compute.amazonaws.com/read_feed.php";
    private FloatingActionButton btn_add_feed;
    RecyclerView recyclerView;
-   private String feed_writer, feed_contents, feed_img, feed_time, feed_profile_img, feed_id, feed_user_id;
+   private String feed_writer, feed_contents, feed_img, feed_time, feed_profile_img, feed_id, feed_user_id,feed_uid;
    RecyclerView.Adapter adapter;
    private ArrayList<DataFeed> feedList = new ArrayList<>();
    private JSONArray imagejArray = new JSONArray();
@@ -132,22 +132,25 @@ public class FeedFragment extends Fragment {
                     public void onResponse(String response) {
                         try {
                             JSONObject jsonObject = new JSONObject(response);
-                            String success = jsonObject.getString("success");
-                            JSONArray jsonArray = jsonObject.getJSONArray("feed");
+                            //String success = jsonObject.getString("success");
+                            JSONArray jsonArray = jsonObject.getJSONArray("feed"); //"feed"라는 jsonArray를 php에서 받음
 
-
+                            //feed 어레이 풀기
                             for (int i = 0; i < jsonArray.length(); i++) {
                                 JSONObject object = jsonArray.getJSONObject(i);
                                 feed_writer = object.getString("name");
                                 feed_contents = object.getString("feed_contents");
 
                                 //feed_img = object.getString("imageArray");
-                                imagejArray = object.getJSONArray("imageArray");
+                                imagejArray = object.getJSONArray("imageArray"); //json어레이 안에 들 이미지 어레이(얘도 jsonArray)
 
+                                //jsonArray를 ArrayList에 담기 위해
                                 if(imagejArray !=null){
                                     imgDataArray = new ArrayList<>();
                                     for (int j = 0; j < imagejArray.length(); j++){
                                        // imgDataArray.add(imagejArray.getString(j));
+
+                                        //이미지를 담을 리사이클러뷰(피드 내 이미지 슬라이더 기능) model class에 담아줌.
                                         imgDataArray.add(new DataFeedImg(imagejArray.getString(j)));
                                     }
 
@@ -156,6 +159,8 @@ public class FeedFragment extends Fragment {
 
                                 feed_time = object.getString("feed_date");
                                 feed_profile_img = object.getString("profile_img");
+                                feed_user_id = object.getString("feed_user_id");
+                                feed_uid = object.getString("feed_uid");
 
                                 Log.d("soo", "php에서 json으로 받은 array 값: " + jsonArray);
                                 Log.d("soo", "php에서 json으로 받은 imageArray 값: " + imagejArray);
@@ -168,13 +173,14 @@ public class FeedFragment extends Fragment {
                                 beforeTime(date);
                                 Log.d("soo", "beforeTime 값: " +  beforeTime(date));
 
-                                feedList.add(new DataFeed(feed_writer,feed_contents,imgDataArray,beforeTime(date),feed_profile_img));
+                                feedList.add(new DataFeed(feed_writer,feed_contents,imgDataArray,beforeTime(date),feed_profile_img,feed_user_id,feed_uid));
+
                             }
 
 
-                            //리사이클러뷰 클릭 이벤트 - 6. onClick메소드 내에 리스너 set
-                            setOnClickListener();
-                            adapter = new FeedAdapter(getContext(),feedList,clickListener);
+                            //리사이클러뷰 클릭 이벤트 - 6. onClick 내에 리스너 set
+                            setOnClickListener(); //인텐트로 피드상세액티비티로 이동하기 위함(리사이클러뷰 아이템 클릭시)
+                            adapter = new FeedAdapter(getContext(),getActivity(),feedList,clickListener);
                             recyclerView.setAdapter(adapter);
                             adapter.notifyDataSetChanged();
 
@@ -247,7 +253,7 @@ public class FeedFragment extends Fragment {
         long sec = gap%60; // 초는 60(1분이 60초라서)으로 나누고 난 후 나머지는 모두 초!!
 
         if(hour > 24){ // 시가 24보다 크면 (하루 지나면)
-            ret = new SimpleDateFormat("MM월dd일 HH:mm").format(date);
+            ret = new SimpleDateFormat("MM월dd일").format(date);
         }
         else if(hour > 0){ //시가 0보다 크면 (즉 시(hour)가 존재한다는 의미 )
             ret = hour+"시간 전";
