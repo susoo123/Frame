@@ -87,7 +87,7 @@ public class AddFeedActivity extends AppCompatActivity {
         feed_contents = findViewById(R.id.feed_contents_et);
         btn_feed_camera = findViewById(R.id.feed_camera_ib);
         btn_upload_feed = findViewById(R.id.btn_upload_feed);
-        feed_img = findViewById(R.id.feed_img_iv);
+        //feed_img = findViewById(R.id.feed_img_iv);
         recyclerView = findViewById(R.id.rv_add_feed_img);
 
 

@@ -41,8 +41,8 @@ public class ImageSliderInFeedAdapter extends RecyclerView.Adapter<ImageSliderIn
 
         DataFeedImg dataFeedImg = sliderImage.get(position);
 
-        String url ="http://ec2-52-79-204-252.ap-northeast-2.compute.amazonaws.com/";
-        String feed_img = url+dataFeedImg.getFeedImg();
+        //String url ="http://ec2-52-79-204-252.ap-northeast-2.compute.amazonaws.com/";
+        String feed_img = dataFeedImg.getFeedImg();
 
         holder.bindSliderImage(feed_img);
 

@@ -81,6 +81,9 @@ dependencies {
     //프로필 이미지 설정할 때 카메라 or 갤러리
     //implementation 'com.github.dhaval2404:imagepicker:2.1'
 
+    //구글 material 디자인
+    implementation 'com.google.android.material:material:1.4.0'
+
 
 
 }

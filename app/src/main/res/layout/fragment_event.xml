@@ -1,15 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!--프래그먼트 이벤트 화면-->
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragment.EventFragment">
+    tools:context=".fragment.EventFragment"
+    android:orientation="vertical"
+    android:scrollbarFadeDuration="0"
+    android:scrollbarSize="0dp"
+    >
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <!-- 피드 들어가는 리사이클러뷰 -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btn_add_event"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:backgroundTint="@color/colorP"
+        android:clickable="true"
+        android:layout_marginBottom="75dp"
+        android:layout_marginEnd="16dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:src="@drawable/ic_baseline_add_24" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_event"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Event Fragment"
-        android:textSize="24sp" />
 
-</FrameLayout>
+        android:background="#efefef"
+        android:scrollbarFadeDuration="0"
+        android:scrollbarSize="0dp"
+        android:scrollbarThumbVertical="@color/colorG"
+        android:scrollbars="vertical" />
+
+
+
+</RelativeLayout>
+

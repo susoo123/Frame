@@ -7,7 +7,6 @@ import android.content.ClipData;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -30,17 +29,20 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.error.AuthFailureError;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.SimpleMultiPartRequest;
+import com.android.volley.request.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
 import com.example.frame.adapter.AddFeedImgAdapter;
+import com.example.frame.etc.DataFeedImg;
 import com.example.frame.etc.SessionManager;
 import com.google.android.material.snackbar.Snackbar;
 import com.karumi.dexter.Dexter;
@@ -50,34 +52,40 @@ import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.single.PermissionListener;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
-public class AddFeedActivity2 extends AppCompatActivity {
 
-    private static String URL_create_feed = "http://ec2-52-79-204-252.ap-northeast-2.compute.amazonaws.com/create_feed.php";
-    private static String URL_create_feed2 = "http://ec2-52-79-204-252.ap-northeast-2.compute.amazonaws.com/create_feed2.php";
+//피드 수정하기 액티비티
+public class EditFeedActivity extends AppCompatActivity {
+
+    //아이템 피드 id를 가져오기
+    //그걸 서버로 요청하고
+    //피드id와 일치하는 정보 가져오기
+    private static String URL_display_feed = "http://ec2-52-79-204-252.ap-northeast-2.compute.amazonaws.com/display_feed.php";
 
     private EditText feed_contents;
     private ImageButton btn_feed_camera;
     private TextView btn_upload_feed;
     private ImageView feed_img;
-    SessionManager sessionManager;
-    Bitmap bitmap;
-    private String encodeImageString;
+
     RecyclerView recyclerView;
     AddFeedImgAdapter adapter;
     private ArrayList<String> feedImgArrayList = new ArrayList<>(); //pathList
-    private Dialog dialog;
-    ProgressDialog progressDialog;
+
     private  ArrayList<Uri> uriList = new ArrayList<>();
-    ArrayList<String> mainPathList = new ArrayList<String>();
-    private String feed_uid;
+    private JSONArray imagejArray = new JSONArray(); //db에 저장되어 있는 이미지 어레이
+    private ArrayList imgDataArray;
+    private ArrayList imgDataArray2; //uri안넣고 경로만 넣은 어레이
+
+
+    private String feed_id;
 
 
 
@@ -91,14 +99,22 @@ public class AddFeedActivity2 extends AppCompatActivity {
         //feed_img = findViewById(R.id.feed_img_iv);
         recyclerView = findViewById(R.id.rv_add_feed_img);
 
+        //이전페이지에서 intent로 해당 피드 아이템의 feed_id를 전송했고, 전송한 값을 받음.
+        Bundle extras = getIntent().getExtras();
+        if(extras !=null){
+            feed_id = extras.getString("feed_id");
+        }
+
+        //피드 정보 가져오기
+        displayFeed(feed_id);
+
 
         //피드 업로드 버튼 누르면 실행
         btn_upload_feed.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.P)
             @Override
             public void onClick(View v) {
-
-                sendImages();
+                sendFeedInfo();
 
             }
         });
@@ -108,7 +124,7 @@ public class AddFeedActivity2 extends AppCompatActivity {
         btn_feed_camera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Dexter.withContext(AddFeedActivity2.this)
+                Dexter.withContext(EditFeedActivity.this)
                         .withPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
                         .withListener(new PermissionListener() {
                             @Override
@@ -141,6 +157,8 @@ public class AddFeedActivity2 extends AppCompatActivity {
     }
 
 
+
+
     //이미지 업로드 관련
     ActivityResultLauncher<Intent> launcher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>()
@@ -169,15 +187,17 @@ public class AddFeedActivity2 extends AppCompatActivity {
                             Log.d("soo", "단일 사진 선택 : " + String.valueOf(data.getData()));
 
                             uriList.add(imgUri);
+                            //imgDataArray.add(imgUri);
 
-                            adapter = new AddFeedImgAdapter(getApplicationContext(), feedImgArrayList);
+                            adapter = new AddFeedImgAdapter(getApplicationContext(), imgDataArray);
+
                             recyclerView.setAdapter(adapter);   // 리사이클러뷰에 어댑터 세팅
-                            recyclerView.setLayoutManager(new LinearLayoutManager(AddFeedActivity2.this, LinearLayoutManager.HORIZONTAL, true));     // 리사이클러뷰 수평 스크롤 적용
+                            recyclerView.setLayoutManager(new LinearLayoutManager(EditFeedActivity.this, LinearLayoutManager.HORIZONTAL, true));     // 리사이클러뷰 수평 스크롤 적용
 
 
 
                         } else {//이미지를 여러장 선택한 경우
-                           // ClipData clipData = data.getClipData();
+                            // ClipData clipData = data.getClipData();
                             Log.d("soo", "여러개 사진 선택 : " + String.valueOf(clipData.getItemCount()));
 
                             if (clipData.getItemCount() > 5) {//사진을 5장 이상인 경우
@@ -194,13 +214,17 @@ public class AddFeedActivity2 extends AppCompatActivity {
 
                                         //uri 를  list 에 담는다
                                         uriList.add(imageUri);
-                                        Log.d("soo", "uri 확인" + imageUri);
+                                        Log.e("soo", "uriList2 : " + uriList);
 
                                         String path = getPathFromUri(imageUri);
-                                        Log.d("soo", "path 확인 : " + path);
 
                                         feedImgArrayList.add(path);
-                                        Log.d("soo", "pathList size 확인 : " + feedImgArrayList.size());
+                                        imgDataArray.add(path);
+                                        Log.e("soo", "feedImgArrayList2 : " + feedImgArrayList);
+                                        Log.e("soo", "imgDataArray2 : " + imgDataArray);
+                                        Log.e("soo", "imagejArray2 : " + imagejArray);
+
+
 
                                     } catch (Exception e) {
 
@@ -208,9 +232,9 @@ public class AddFeedActivity2 extends AppCompatActivity {
                                     }
                                 }
 
-                                adapter = new AddFeedImgAdapter(getApplicationContext(), feedImgArrayList);
+                                adapter = new AddFeedImgAdapter(getApplicationContext(), imgDataArray);
                                 recyclerView.setAdapter(adapter);   // 리사이클러뷰에 어댑터 세팅
-                                recyclerView.setLayoutManager(new LinearLayoutManager(AddFeedActivity2.this, LinearLayoutManager.HORIZONTAL, true));     // 리사이클러뷰 수평 스크롤 적용
+                                recyclerView.setLayoutManager(new LinearLayoutManager(EditFeedActivity.this, LinearLayoutManager.HORIZONTAL, true));     // 리사이클러뷰 수평 스크롤 적용
 
 
                             }
@@ -242,15 +266,11 @@ public class AddFeedActivity2 extends AppCompatActivity {
 
 
 
-    public void sendImages(){
-        String url = "http://ec2-52-79-204-252.ap-northeast-2.compute.amazonaws.com/create_feed3.php";
-
-        sessionManager = new SessionManager(this);
-        HashMap<String,String> user = sessionManager.getUserDetail();
-        String user_id = user.get(sessionManager.ID);//로그인 한 사용자 id 가져오기(쉐어드에서)
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void sendFeedInfo(){
+        String url = "http://ec2-52-79-204-252.ap-northeast-2.compute.amazonaws.com/update_feed.php";
 
         final String contents = this.feed_contents.getText().toString().trim();//적힌 피드 내용
-        feed_uid = createCode(); //feed_uid를 생성함.
 
 
         SimpleMultiPartRequest smpr = new SimpleMultiPartRequest(Request.Method.POST, url, new Response.Listener<String>() {
@@ -264,11 +284,11 @@ public class AddFeedActivity2 extends AppCompatActivity {
 
                     if(post.equals("1")){
 
-                        Toast.makeText(AddFeedActivity2.this, "피드 등록 성공", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(AddFeedActivity2.this, MainActivity.class));
+                        Toast.makeText(EditFeedActivity.this, "피드 수정 성공", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(EditFeedActivity.this, MainActivity.class));
 
                     }else{
-                        Toast.makeText(AddFeedActivity2.this, "피드 등록 실패!!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(EditFeedActivity.this, "피드 수정 실패!!", Toast.LENGTH_SHORT).show();
                     }
 
                 } catch (JSONException e) {
@@ -286,19 +306,36 @@ public class AddFeedActivity2 extends AppCompatActivity {
 
 
         //데이터 추가
-        smpr.addStringParam("user_id", user_id); //쉐어드에서 가져온 로그인한 사용자 id
+        //smpr.addStringParam("user_id", user_id); //쉐어드에서 가져온 로그인한 사용자 id
         smpr.addStringParam("contents", contents); //피드에 적힐 내용
-        smpr.addStringParam("feed_uid", feed_uid); //피드 고유번호
-        smpr.addStringParam("cntImage", String.valueOf(feedImgArrayList.size()));//이미지 개수 보내기
+        smpr.addStringParam("feed_id", feed_id); //피드 고유번호
 
-
-        //이미지 파일 추가
-        if(feedImgArrayList.size() > 0 ){ //이미지가 추가되면
-            for(int i = 0; i < feedImgArrayList.size(); i++){
-                smpr.addFile("image" + i, feedImgArrayList.get(i)); //파일에 이미지들을 추가함.
-                Log.d("soo","전송 후 path 확인 : " + feedImgArrayList.get(i));
+        if(feedImgArrayList != null){
+            smpr.addStringParam("cntImage", String.valueOf(feedImgArrayList.size()));//이미지 개수 보내기
+            //이미지 파일 추가
+            if(feedImgArrayList.size() > 0 ){ //이미지가 추가되면
+                for(int i = 0; i < feedImgArrayList.size(); i++){
+                    smpr.addFile("image" + i, feedImgArrayList.get(i)); //파일에 이미지들을 추가함.
+                    Log.d("soo","전송 후 path 확인 : " + feedImgArrayList.get(i));
+                }
             }
         }
+
+
+        if(imgDataArray != null) {
+            smpr.addStringParam("imgDataArray", String.join(",",imgDataArray));
+            //smpr.addStringParam("imgDataArray2", String.valueOf(imgDataArray2));
+            Log.d("soo","전송 후 imgDataArray 확인 : " + String.join(",",imgDataArray));
+        }
+
+//        if(imgDataArray2 != null) {
+//            smpr.addStringParam("imgDataArray2", String.join(",",imgDataArray2));
+//            //smpr.addStringParam("imgDataArray2", String.valueOf(imgDataArray2));
+//            Log.d("soo","전송 후 imgDataArray2 확인 : " + String.join(",",imgDataArray2));
+//        }
+
+
+
 
         //사용자가 request 객체에 요청 내용 담아 RequestQueue에 추가하면,
         //RequestQueue가 알아서 쓰레드 생성해 서버에 요청을 보내고 응답 받음.
@@ -316,7 +353,9 @@ public class AddFeedActivity2 extends AppCompatActivity {
             case 102:
                 Snackbar.make(findViewById(R.id.rootId),"삭제",Snackbar.LENGTH_LONG).show();
                 adapter.RemoveItem(item.getGroupId()); //어댑터에서 이미지가 저장된 아이템이 제거됨.
-            return true;
+                //adapter.notifyDataSetChanged();
+
+                return true;
 
         }
 
@@ -324,31 +363,125 @@ public class AddFeedActivity2 extends AppCompatActivity {
 
     }
 
-    //해당 피드 고유 코드 만들기 (feed_uid에 저장됨)
-    private String createCode() {
-        String[] str = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s",
-                "t", "u", "v", "w", "x", "y", "z", "1", "2", "3", "4", "5", "6", "7", "8", "9","!","@","#","$"};
-        String newCode = new String();
 
-        for (int x = 0; x < 8; x++) {
-            int random = (int) (Math.random() * str.length);
-            newCode += str[random];
-        }
 
-        return newCode;
+    //볼리 사용해서 피드id 보내면 해당 피드 정보 가져와서 띄우기
+    private void displayFeed(String feed_id3) {
+
+        //디비에 저장된 content와 이미지들만 가져오면 됨...
+
+        //디비에 저장된 값을 가져오기
+        StringRequest stringRequest = new StringRequest(Request.Method.POST,URL_display_feed,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            String success = jsonObject.getString("success");
+                            JSONArray jsonArray = jsonObject.getJSONArray("feed_display");
+
+                            if(success.equals("1")){
+                                for (int i = 0; i < jsonArray.length(); i++){
+
+                                    JSONObject object = jsonArray.getJSONObject(i);
+                                    String db_contents = object.getString("feed_contents").trim();
+                                    //이미지 어레이 가져와야함..
+                                    String feed_id = object.getString("feed_id").trim();
+
+                                    imagejArray = object.getJSONArray("imageArray"); //json어레이 안에 들 이미지 어레이(얘도 jsonArray)
+
+
+                                    //jsonArray를 ArrayList에 담기 위해
+                                    if(imagejArray !=null) {
+                                        imgDataArray = new ArrayList<Uri>();
+                                        for (int j = 0; j < imagejArray.length(); j++) {
+
+                                            imgDataArray.add(imagejArray.getString(j));
+
+                                        }
+                                        Log.e("어레이확인","imgDataArray : "+imgDataArray);
+                                    }
+
+//                                    // 디비에 저장되어 있던 이미지 경로 그대로 arraylist 만들어주려고
+//                                    if(imagejArray !=null) {
+//                                        imgDataArray2 = new ArrayList<Uri>();
+//                                        for (int j = 0; j < imagejArray.length(); j++) {
+//
+//                                            imgDataArray2.add(imagejArray.getString(j));
+//                                            Log.e("어레이확인","imgDataArray2 : "+imgDataArray2);
+//                                        }
+//                                    }
+
+
+
+                                    adapter = new AddFeedImgAdapter(getApplicationContext(), imgDataArray);
+                                    recyclerView.setAdapter(adapter);   // 리사이클러뷰에 어댑터 세팅
+                                    recyclerView.setLayoutManager(new LinearLayoutManager(EditFeedActivity.this, LinearLayoutManager.HORIZONTAL, true));     // 리사이클러뷰 수평 스크롤 적용
+
+                                    feed_contents.setText(db_contents);
+
+                                }
+
+
+
+                            }else {
+
+                                Log.d("soo","피드 에러/ 피드 읽어오지 못함.");
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+
+                            Toast.makeText(EditFeedActivity.this, "피드 가져오기  에러" + e.toString(),Toast.LENGTH_SHORT).show();
+                            Log.d("soo","피드 가져오기  에러: " +e.toString());
+
+                        }
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                        Toast.makeText(EditFeedActivity.this, "피드 가져오기 에러2" + error.toString(),Toast.LENGTH_SHORT).show();
+
+                    }
+                })
+
+
+        {
+
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String,String> params = new HashMap<>();
+
+                params.put("feed_id",feed_id3);
+
+                return params;
+            }
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(stringRequest);
+
     }
 
 
-    //이미지 인코딩
-    private void encodeBitmapImage(Bitmap bitmap) {
 
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG,100,byteArrayOutputStream);
 
-        byte[] bytesofimage = byteArrayOutputStream.toByteArray();
-        encodeImageString = Base64.encodeToString(bytesofimage, Base64.DEFAULT);
 
-    }
+
 
 
 }
+
+
+
+
+
+
+
+
+
+
+

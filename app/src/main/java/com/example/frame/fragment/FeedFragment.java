@@ -160,7 +160,7 @@ public class FeedFragment extends Fragment {
                                 feed_time = object.getString("feed_date");
                                 feed_profile_img = object.getString("profile_img");
                                 feed_user_id = object.getString("feed_user_id");
-                                feed_uid = object.getString("feed_uid");
+                                feed_id = object.getString("feed_id");
 
                                 Log.d("soo", "php에서 json으로 받은 array 값: " + jsonArray);
                                 Log.d("soo", "php에서 json으로 받은 imageArray 값: " + imagejArray);
@@ -173,7 +173,8 @@ public class FeedFragment extends Fragment {
                                 beforeTime(date);
                                 Log.d("soo", "beforeTime 값: " +  beforeTime(date));
 
-                                feedList.add(new DataFeed(feed_writer,feed_contents,imgDataArray,beforeTime(date),feed_profile_img,feed_user_id,feed_uid));
+                                //feed_uid = feed_id 임!!
+                                feedList.add(new DataFeed(feed_writer,feed_contents,imgDataArray,beforeTime(date),feed_profile_img,feed_user_id,feed_id));
 
                             }
 

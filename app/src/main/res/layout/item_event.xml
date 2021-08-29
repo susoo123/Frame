@@ -1,62 +1,226 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<!--이벤트 화면 리사이클러뷰 아이템 -->
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.cardview.widget.CardView
-        android:layout_width="200dp"
-        android:layout_height="250dp"
-        app:cardCornerRadius="15dp"
-        android:layout_margin="10dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-        <LinearLayout
-            android:background="@color/black"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="11dp"
+        android:layout_marginRight="11dp"
+        android:layout_marginTop="7dp"
+        android:layout_marginBottom="7dp"
+        app:cardElevation="15dp"
+        app:cardCornerRadius="10dp"
+        >
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="wrap_content">
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cardView"
-                android:layout_marginTop="20dp"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:layout_gravity="center_horizontal"
-                app:cardCornerRadius="20dp">
+            <ImageView
+                android:id="@+id/event_img"
+                android:layout_width="match_parent"
+                android:layout_height="230dp"
+                android:scaleType="centerCrop"
+                android:transitionName="event_img" />
 
-                <ImageView
+            <ImageView
+                android:id="@+id/shadow_bottom"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:layout_alignBottom="@+id/event_img"
+                android:src="@drawable/bottom_shadow" />
+
+            <ProgressBar
+                android:id="@+id/progress_load_photo"
+                style="@android:style/Widget.ProgressBar.Small"
+                android:layout_marginTop="70dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <FrameLayout
+                android:id="@+id/event_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/event_img"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="-50dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/round_white"
+                android:padding="5dp">
+
+                <TextView
+                    android:id="@+id/publishedAt"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/app_logo" />
-            </androidx.cardview.widget.CardView>
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:text="이벤트 진행 중"
+                    android:textColor="#606060" />
 
 
-        <TextView
-            android:layout_marginTop="10dp"
-            android:layout_width="100dp"
-            android:layout_height="30dp"
-            android:layout_gravity="center_horizontal"
-            android:text="전시회 제목"
-            android:textColor="@color/white"
-            android:textStyle="bold"
-            android:textSize="20sp" />
+            </FrameLayout>
+
 
             <TextView
-                android:layout_width="130dp"
-                android:layout_height="50dp"
-                android:textColor="@color/white"
-                android:gravity="center_horizontal"
-                android:layout_gravity="center_horizontal"
-                android:text="2021년 8월 30일까지"
-                android:textSize="13sp" />
+                android:id="@+id/event_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/event_img"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="16dp"
+                android:text="이벤트 제목"
+                android:textColor="@color/black"
+                android:textSize="17sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/desc"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_below="@id/event_title"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="16dp"
+                android:text="" />
+
+            <TextView
+                android:id="@+id/source"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_below="@+id/desc"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:drawablePadding="10dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:text="이벤트 기한"
+                android:textColor="@color/colorG"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/event_start"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_below="@id/desc"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_toRightOf="@id/source"
+                android:drawablePadding="10dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:text="2021-08-24"
+                />
+            <TextView
+                android:id="@+id/event_divide"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_below="@id/desc"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_toRightOf="@id/event_start"
+                android:drawablePadding="10dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:text=" ~ "
+
+                />
+            <TextView
+                android:id="@+id/event_date"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_below="@id/desc"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_toRightOf="@id/event_divide"
+                android:drawablePadding="10dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:text="2021-08-31"
+                />
 
 
-        </LinearLayout>
+        </RelativeLayout>
+
+
+
+
     </androidx.cardview.widget.CardView>
 
+</FrameLayout>
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+<!--<?xml version="1.0" encoding="utf-8"?>-->
+
+<!--&lt;!&ndash;이벤트 화면 리사이클러뷰 아이템 &ndash;&gt;-->
+<!--<androidx.constraintlayout.widget.ConstraintLayout -->
+<!--    xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--    android:layout_width="match_parent"-->
+<!--    android:layout_height="match_parent"-->
+<!--    xmlns:app="http://schemas.android.com/apk/res-auto">-->
+
+<!--    <androidx.cardview.widget.CardView-->
+<!--        android:layout_width="200dp"-->
+<!--        android:layout_height="250dp"-->
+<!--        app:cardCornerRadius="15dp"-->
+<!--        android:layout_margin="10dp"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent">-->
+<!--        <LinearLayout-->
+<!--            android:background="@color/black"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:orientation="vertical">-->
+
+<!--            <androidx.cardview.widget.CardView-->
+<!--                android:id="@+id/cardView"-->
+<!--                android:layout_marginTop="20dp"-->
+<!--                android:layout_width="150dp"-->
+<!--                android:layout_height="150dp"-->
+<!--                android:layout_gravity="center_horizontal"-->
+<!--                app:cardCornerRadius="20dp">-->
+
+<!--                <ImageView-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:src="@drawable/app_logo" />-->
+<!--            </androidx.cardview.widget.CardView>-->
+
+
+<!--        <TextView-->
+<!--            android:layout_marginTop="10dp"-->
+<!--            android:layout_width="100dp"-->
+<!--            android:layout_height="30dp"-->
+<!--            android:layout_gravity="center_horizontal"-->
+<!--            android:text="전시회 제목"-->
+<!--            android:textColor="@color/white"-->
+<!--            android:textStyle="bold"-->
+<!--            android:textSize="20sp" />-->
+
+<!--            <TextView-->
+<!--                android:layout_width="130dp"-->
+<!--                android:layout_height="50dp"-->
+<!--                android:textColor="@color/white"-->
+<!--                android:gravity="center_horizontal"-->
+<!--                android:layout_gravity="center_horizontal"-->
+<!--                android:text="2021년 8월 30일까지"-->
+<!--                android:textSize="13sp" />-->
+
+
+<!--        </LinearLayout>-->
+<!--    </androidx.cardview.widget.CardView>-->
+
+
+
+<!--</androidx.constraintlayout.widget.ConstraintLayout>-->

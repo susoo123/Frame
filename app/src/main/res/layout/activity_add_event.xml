@@ -1,59 +1,116 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
     android:paddingHorizontal="14dp"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+   >
 
     <TextView
         android:id="@+id/textView3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginTop="20dp"
         android:gravity="center"
         android:text="이벤트 생성"
+        android:textStyle="bold"
         android:textSize="20sp"
        />
 
     <EditText
-        android:id="@+id/event_title"
+        android:id="@+id/event_add_title"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_marginTop="20dp"
+        android:padding="10dp"
         android:textStyle="bold"
         android:textSize="20sp"
         android:background="@color/colorG"
         android:hint="이벤트 제목을 입력하세요."
+        android:layout_marginBottom="10dp"
         />
 
 
-    <EditText
-        android:id="@+id/event_art_title"
+<!--    <EditText-->
+<!--        android:id="@+id/event_add_art_title"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="42dp"-->
+<!--        android:layout_marginBottom="15dp"-->
+<!--        android:layout_marginHorizontal="10dp"-->
+<!--        android:hint="이벤트 할 전시회 제목을 입력하세요."-->
+<!--        />-->
+
+    <TextView
         android:layout_width="match_parent"
-        android:layout_height="42dp"
+        android:layout_height="30dp"
         android:layout_marginHorizontal="10dp"
-        android:hint="이벤트 할 전시회 제목을 입력하세요."
+        android:text="이벤트 시작일"
+        android:textStyle="bold"
+        android:textColor="@color/colorP"
         />
 
-    <EditText
+
+    <TextView
         android:id="@+id/event_date_start"
         android:layout_width="match_parent"
         android:layout_height="42dp"
         android:layout_marginHorizontal="10dp"
-        android:hint="이벤트 시작일을 입력해주세요"
+        android:hint="이벤트 시작일 선택"
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_marginHorizontal="10dp"
+        android:text="이벤트 종료일"
+        android:textStyle="bold"
+        android:textColor="@color/colorP"
         />
 
-    <EditText
+
+
+    <TextView
         android:id="@+id/event_date_end"
         android:layout_width="match_parent"
         android:layout_height="42dp"
         android:layout_marginHorizontal="10dp"
-        android:hint="이벤트 종료일을 입력해주세요"
+        android:hint="이벤트 종료일 선택"
         />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="10dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="당첨 인원"
+            android:textStyle="bold"
+            android:textColor="@color/colorG"
+            />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:layout_marginHorizontal="10dp"
+            android:hint="당첨 인원을 입력하세요."
+            android:textSize="15dp"
+            android:textColor="@color/colorG"
+            />
+    </LinearLayout>
+
 
 
     <EditText
@@ -65,6 +122,7 @@
         android:gravity="top"
         android:hint="안내할 내용을 입력해주세요."
         />
+
 
 
     <LinearLayout
@@ -82,7 +140,7 @@
             app:cardCornerRadius="10dp">
 
             <ImageButton
-                android:id="@+id/feed_camera_ib"
+                android:id="@+id/btn_event_add_camera"
                 android:layout_width="90dp"
                 android:layout_height="90dp"
                 android:layout_gravity="center"
@@ -99,7 +157,7 @@
             android:elevation="20dp">
 
             <ImageView
-                android:id="@+id/feed_img_iv"
+                android:id="@+id/event_add_thumbnail"
                 android:layout_width="100dp"
                 android:layout_height="100dp" />
 
@@ -108,14 +166,14 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/btn_upload_feed"
+        android:id="@+id/btn_upload_event"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="36dp"
         android:layout_marginTop="10dp"
         android:background="@drawable/btnblock"
         android:gravity="center"
-        android:text="피드 올리기"
+        android:text="이벤트 생성하기"
         android:textColor="@color/white"
         android:textSize="17sp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -124,3 +182,4 @@
         app:layout_constraintStart_toStartOf="parent" />
 
 </LinearLayout>
+</ScrollView>

@@ -39,6 +39,7 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.example.frame.AddFeedActivity2;
 import com.example.frame.DetailFeedActivity;
+import com.example.frame.EditFeedActivity;
 import com.example.frame.MainActivity;
 import com.example.frame.R;
 import com.example.frame.etc.AppHelper;
@@ -132,7 +133,12 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
                     @Override
                     public boolean onMenuItemClick(MenuItem menuItem) {
                         if (menuItem.getItemId() == R.id.edit) {
-                            Toast.makeText(context, "메뉴 1 클릭", Toast.LENGTH_SHORT).show();
+
+                            String feed_uid2 = feedList.get(viewHolder.getAdapterPosition()).getFeed_uid();
+                            Intent intent = new Intent(activity,EditFeedActivity.class);
+                            intent.putExtra("feed_id",feed_uid2);
+
+                            view.getContext().startActivity(intent);
 
 
                         } else if (menuItem.getItemId() == R.id.del) {
@@ -141,7 +147,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
                                     .setNegativeButton("예", new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
-                                            sendDelMessage(which);
+                                            sendDelMessage(viewHolder.getAdapterPosition());
 //                                            ((MainActivity)view.getContext()).replaceFragment(FeedFragment.newInstance());
 ////
 //                                            Intent intent = new Intent(activity,MainActivity.class);
@@ -226,7 +232,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
         //9번
         holder.setData(contents,writer,feed_time);
 
-        holder.bind(feedList.get(position));
+        //holder.bind(feedList.get(position));
 
 
     }
@@ -283,35 +289,36 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
 
         }
 
-        void bind(final DataFeed dataFeed){
-            if(checkedPosition == -1){
+        //리사이클러뷰 아이템 클릭
+//        void bind(final DataFeed dataFeed){
+//            if(checkedPosition == -1){
+//
+//            }else {
+//                if(checkedPosition == getAdapterPosition()){ //아이템이 선택되면
+//                    //피드 uid를 서버로 보낸다.
+//                    Log.e("확인","아이템 포지션2: "+checkedPosition);
+//
+//                }else {
+//
+//                }
+//            }
 
-            }else {
-                if(checkedPosition == getAdapterPosition()){ //아이템이 선택되면
-                    //피드 uid를 서버로 보낸다.
-                    Log.e("확인","아이템 포지션2: "+checkedPosition);
-
-                }else {
-
-                }
-            }
-
-            //리사이클러뷰 아이템을 클릭하면
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //이미지뷰가 보임
-                    if(checkedPosition != getAdapterPosition()){
-                        notifyItemChanged(checkedPosition);
-                        checkedPosition = getAdapterPosition();
-                        Log.e("확인","아이템 포지션: "+checkedPosition);
-                    }
-                }
-            });
+//            //리사이클러뷰 아이템을 클릭하면
+//            itemView.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    //이미지뷰가 보임
+//                    if(checkedPosition != getAdapterPosition()){
+//                        notifyItemChanged(checkedPosition);
+//                        checkedPosition = getAdapterPosition();
+//                        Log.e("확인","아이템 포지션: "+checkedPosition);
+//                    }
+//                }
+//            });
 
 
         }
-    }
+//    }
 
     public DataFeed getSelected(){
         if(checkedPosition != -1){
@@ -371,8 +378,10 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
 
     }
 
+    //피드 삭제 메서드
     private void sendDelMessage(int position){
         String url = "http://ec2-52-79-204-252.ap-northeast-2.compute.amazonaws.com/del_feed.php";
+        String feed_uid2 = feedList.get(position).getFeed_uid();
 
         StringRequest request = new StringRequest(Request.Method.POST, url,
                 new com.android.volley.Response.Listener<String>() {
@@ -413,8 +422,8 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
-                params.put("feed_uid",feed_uid);
-                Log.e("soo","feed_uid확인2 : " + feed_uid );
+                params.put("feed_uid",feed_uid2);
+                Log.e("soo","feed_uid 확인2 : " + feed_uid2 );
 
                 return params;
 
@@ -426,6 +435,8 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
        requestQueue.add(request);
 
     }
+
+
 
 
 
