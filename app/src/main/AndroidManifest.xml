@@ -20,16 +20,20 @@
 
         android:theme="@style/Theme.Frame"
 
-        android:usesCleartextTraffic="true">
+        android:usesCleartextTraffic="true"
+
+        >
 
 
         <activity android:name=".EditProfileActivity"></activity>
         <activity android:name=".EditFeedActivity"></activity>
 
         <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-
-
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
 
         <activity android:name=".RegisterActivity"></activity>
@@ -63,11 +67,11 @@
         </activity>
 
         <activity android:name=".DetailEventActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+        </activity>
+
+        <activity android:name=".AddressApiActivity">
+
         </activity>
 
 

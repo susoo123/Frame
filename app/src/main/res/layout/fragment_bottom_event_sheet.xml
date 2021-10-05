@@ -9,19 +9,33 @@
     android:paddingTop="24dp"
     android:paddingBottom="40dp">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:text="Bottom Sheet"
-        android:textColor="@android:color/black"
-        android:textSize="24sp" />
+
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:text="공연정보"
+        android:textColor="@android:color/black"
+        android:textSize="24sp" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    <ImageView
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:src="@drawable/app_logo"/>
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:text="- 하단에 필요한 정보를 넣을수 있습니다."
+        android:text="당첨인원."
         android:textColor="@android:color/black"
         android:textSize="16sp" />
 
@@ -29,15 +43,29 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
-        android:text="- 정말 활용도가 높은 기능이죠? 모두 즐겁게 개발해요."
+        android:text="공연일시."
         android:textColor="@android:color/black"
         android:textSize="16sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="2021-8-30 ~"/>
+
+    </LinearLayout>
+</LinearLayout>
 
     <Button
         android:id="@+id/btn_bottom_event"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textStyle="bold"
-        android:text="좋아요!" />
+        android:textSize="16sp"
+        android:background="#B96BC6"
+        style="@style/btnBackground"
+        android:text="응모하기"/>
+
+
 
 </LinearLayout>
+

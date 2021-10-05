@@ -3,5 +3,14 @@
     <domain-config cleartextTrafficPermitted="true">
         <domain includeSubdomains="true">ec2-52-79-204-252.ap-northeast-2.compute.amazonaws.com</domain>
         <domain includeSubdomains="true"> www.culture.go.kr</domain>
+        <domain includeSubdomains="true">https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js</domain>
     </domain-config>
+
+    <base-config cleartextTrafficPermitted="true">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+
 </network-security-config>
+

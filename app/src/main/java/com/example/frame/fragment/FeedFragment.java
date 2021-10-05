@@ -124,6 +124,7 @@ public class FeedFragment extends Fragment {
 
     }
 
+    //볼리로 요청 보내기
     public void sendRequest() {
         String url = URL_read_feed;
         StringRequest request = new StringRequest(Request.Method.GET, url,

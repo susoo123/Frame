@@ -34,7 +34,6 @@
         android:padding="10dp"
         android:textStyle="bold"
         android:textSize="20sp"
-        android:background="@color/colorG"
         android:hint="이벤트 제목을 입력하세요."
         android:layout_marginBottom="10dp"
         />
@@ -101,15 +100,53 @@
             />
 
         <EditText
+            android:id="@+id/number_entry"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_gravity="center"
             android:layout_marginHorizontal="10dp"
             android:hint="당첨 인원을 입력하세요."
             android:textSize="15dp"
-            android:textColor="@color/colorG"
             />
     </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="10dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="전시 장소"
+            android:textStyle="bold"
+            android:textColor="@color/colorG"
+            />
+
+        <EditText
+            android:id="@+id/address"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:layout_marginHorizontal="10dp"
+            android:hint="전시 장소를 입력하세요."
+            android:textSize="15dp"
+            />
+
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/address2"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_gravity="center"
+        android:layout_marginRight="35dp"
+        android:layout_marginLeft="60dp"
+        android:hint="상세 주소를 입력하세요."
+        android:textSize="15dp"
+        />
 
 
 
@@ -149,19 +186,16 @@
 
         </androidx.cardview.widget.CardView>
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/cardView3"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_marginLeft="20dp"
-            android:elevation="20dp">
 
-            <ImageView
-                android:id="@+id/event_add_thumbnail"
-                android:layout_width="100dp"
-                android:layout_height="100dp" />
 
-        </androidx.cardview.widget.CardView>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_add_event_img"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_marginHorizontal="5dp"
+                />
+
+
 
     </LinearLayout>
 

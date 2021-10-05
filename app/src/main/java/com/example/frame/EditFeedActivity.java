@@ -58,6 +58,7 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -83,6 +84,7 @@ public class EditFeedActivity extends AppCompatActivity {
     private JSONArray imagejArray = new JSONArray(); //db에 저장되어 있는 이미지 어레이
     private ArrayList imgDataArray;
     private ArrayList imgDataArray2; //uri안넣고 경로만 넣은 어레이
+    private ArrayList removeImgArray = new ArrayList<>();
 
 
     private String feed_id;
@@ -219,10 +221,10 @@ public class EditFeedActivity extends AppCompatActivity {
                                         String path = getPathFromUri(imageUri);
 
                                         feedImgArrayList.add(path);
-                                        imgDataArray.add(path);
-                                        Log.e("soo", "feedImgArrayList2 : " + feedImgArrayList);
-                                        Log.e("soo", "imgDataArray2 : " + imgDataArray);
-                                        Log.e("soo", "imagejArray2 : " + imagejArray);
+                                        imgDataArray.add(path);//리사이클러뷰에 띄우려면 필요함.
+                                        Log.e("soo", "feedImgArrayList2 : " + feedImgArrayList);//에뮬 내의 경로
+                                        Log.e("soo", "imgDataArray2 : " + imgDataArray); //최종적으로 가야하는.. 근데 에뮬 내의 경로가 섞여 있음.
+                                        Log.e("soo", "imagejArray2 : " + imagejArray); //원래 디비에 저장되어 있던 경로
 
 
 
@@ -316,14 +318,58 @@ public class EditFeedActivity extends AppCompatActivity {
             if(feedImgArrayList.size() > 0 ){ //이미지가 추가되면
                 for(int i = 0; i < feedImgArrayList.size(); i++){
                     smpr.addFile("image" + i, feedImgArrayList.get(i)); //파일에 이미지들을 추가함.
-                    Log.d("soo","전송 후 path 확인 : " + feedImgArrayList.get(i));
+                    Log.d("soo","전송 후 path 확인 : " + feedImgArrayList.get(i)); //에뮬 내의 경로가 feedImgArrayList에 들어감
                 }
             }
         }
 
+        String str_url ="http://ec2-52-79-204-252.ap-northeast-2.compute.amazonaws.com/profile_image/";
+        //contains(url)
+        String dataImg = String.join(",",imgDataArray);
+
+//        for(int j = 0; j < imgDataArray.size(); j++) {
+//               String data = (String) imgDataArray.get(j);
+//
+//            if (data.contains(str_url)) {
+//                smpr.addStringParam("urlStrArrayList", dataImg);
+//                Log.d("soo", "전송 후 urlArrayList 확인 : " + dataImg);
+//            }
+//        }
+//
+//            }else {
+//
+//                if(feedImgArrayList != null){
+//                    smpr.addStringParam("cntImage", String.valueOf(feedImgArrayList.size()));//이미지 개수 보내기
+//                    //이미지 파일 추가
+//                    if(feedImgArrayList.size() > 0 ){ //이미지가 추가되면
+//                        for(int i = 0; i < feedImgArrayList.size(); i++){
+//                            smpr.addFile("image" + i, feedImgArrayList.get(i)); //파일에 이미지들을 추가함.
+//                            Log.d("soo","전송 후 path 확인 : " + feedImgArrayList.get(i)); //에뮬 내의 경로가 feedImgArrayList에 들어감
+//                        }
+//                    }
+//                }
+//
+//            }
+//
+//
+//
+//        }
 
         if(imgDataArray != null) {
-            smpr.addStringParam("imgDataArray", String.join(",",imgDataArray));
+
+            for(int j = 0; j < imgDataArray.size(); j++) {
+                String data = (String) imgDataArray.get(j);
+
+                if (data.contains(str_url)) {
+                    smpr.addStringParam("urlStrArrayList", data);
+                    //Log.e("soo", "전송 후 urlArrayList 확인 : " + dataImg);
+                    Log.e("soo", "전송 후 urlArrayList 확인 : " + data);
+                }
+
+            }
+            //smpr.addStringParam("urlStrArrayList", data);
+
+            smpr.addStringParam("imgDataArray", String.join(",",imgDataArray)); //섞인게 감...
             //smpr.addStringParam("imgDataArray2", String.valueOf(imgDataArray2));
             Log.d("soo","전송 후 imgDataArray 확인 : " + String.join(",",imgDataArray));
         }
@@ -354,6 +400,9 @@ public class EditFeedActivity extends AppCompatActivity {
                 Snackbar.make(findViewById(R.id.rootId),"삭제",Snackbar.LENGTH_LONG).show();
                 adapter.RemoveItem(item.getGroupId()); //어댑터에서 이미지가 저장된 아이템이 제거됨.
                 //adapter.notifyDataSetChanged();
+                removeImgArray.add(item.getGroupId());
+                Log.e("soo","삭제된 이미지 어레이: "+removeImgArray);
+
 
                 return true;
 

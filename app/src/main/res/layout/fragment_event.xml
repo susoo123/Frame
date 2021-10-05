@@ -9,7 +9,9 @@
     android:orientation="vertical"
     android:scrollbarFadeDuration="0"
     android:scrollbarSize="0dp"
+    android:background="@color/white"
     >
+
 
     <!-- 피드 들어가는 리사이클러뷰 -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -25,17 +27,43 @@
         android:layout_alignParentBottom="true"
         android:src="@drawable/ic_baseline_add_24" />
 
+    <TextView
+        android:id="@+id/event_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="이벤트 티켓을 "
+        android:background="@color/white"
+        android:textSize="25dp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginTop="10dp"
+        />
+
+    <TextView
+        android:id="@+id/event_tv2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/event_tv"
+        android:layout_marginHorizontal="10dp"
+        android:background="@color/white"
+        android:textColor="@color/black"
+        android:text="응모해보세요."
+        android:textSize="25dp"
+        android:textStyle="bold" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_event"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/event_tv2"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="19dp"
         android:background="#efefef"
         android:scrollbarFadeDuration="0"
         android:scrollbarSize="0dp"
         android:scrollbarThumbVertical="@color/colorG"
         android:scrollbars="vertical" />
-
 
 
 </RelativeLayout>
