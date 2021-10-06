@@ -34,11 +34,14 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
 
         <activity android:name=".RegisterActivity"></activity>
 
         <activity android:name=".LoginActivity">
+
+
 
         </activity>
 
@@ -71,6 +74,14 @@
         </activity>
 
         <activity android:name=".AddressApiActivity">
+
+        </activity>
+
+        <activity android:name=".EventManageActivity">
+
+        </activity>
+
+        <activity android:name=".EventRegisterActivity">
 
         </activity>
 

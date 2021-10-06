@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:scrollbarFadeDuration="0"
+    android:scrollbarSize="0dp"
+    android:background="@color/white"
+    >
+
+    <TextView
+        android:id="@+id/register_event_title_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:layout_marginLeft="10dp"
+        android:text="전시회 제목"
+        android:background="@color/white"
+        android:textSize="25dp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:layout_marginLeft="10dp"
+        android:text="응모자 목록"
+        android:background="@color/white"
+        android:textSize="25dp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+
+        />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_register"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="19dp"
+        android:background="#efefef"
+        android:scrollbarFadeDuration="0"
+        android:scrollbarSize="0dp"
+        android:scrollbarThumbVertical="@color/colorG"
+        android:scrollbars="vertical" />
+
+
+</LinearLayout>
+

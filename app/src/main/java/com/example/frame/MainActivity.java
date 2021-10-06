@@ -17,6 +17,7 @@ import com.example.frame.etc.SessionManager;
 import com.example.frame.fragment.EventFragment;
 import com.example.frame.fragment.FeedFragment;
 import com.example.frame.fragment.HomeFragment;
+import com.example.frame.fragment.MypageAdminFragment;
 import com.example.frame.fragment.MypageFragment;
 import com.example.frame.fragment.SearchFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -31,7 +32,7 @@ import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
 
-    private String StrProfileImg, StrEmail;
+    private String StrProfileImg, StrEmail,role;
     private Button btn_logout;
     SessionManager sessionManager;
 
@@ -58,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
         HashMap<String,String> user = sessionManager.getUserDetail();
         String mName = user.get(sessionManager.NAME);
         String mEmail = user.get(sessionManager.EMAIL);
+        role = user.get(sessionManager.ROLE);
 
 
 
@@ -208,8 +210,18 @@ public class MainActivity extends AppCompatActivity {
             return new FeedFragment();
 
             case R.id.mypage:
-            bottomNavigationView.getMenu().getItem(4).setChecked(true);
-            return new MypageFragment();
+
+                //쉐어드에 저장된 role이 어드민일때 (어드민계정일때)
+                if(role.equals("admin")){
+                    bottomNavigationView.getMenu().getItem(4).setChecked(true);
+                    return new MypageAdminFragment();
+
+                }else{ //유저 계정일 때
+                    bottomNavigationView.getMenu().getItem(4).setChecked(true);
+                    return new MypageFragment();
+
+                }
+
 
         }
         //홈프래그컨트를 체크된 디폴트로 set

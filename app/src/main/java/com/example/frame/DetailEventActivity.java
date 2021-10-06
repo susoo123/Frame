@@ -39,6 +39,7 @@ public class DetailEventActivity extends AppCompatActivity {
     private ArrayList<DataEvent> eventList = new ArrayList<>();
     private TextView title_event,num_of_people,start_date,end_date,event_contents;
     private ImageView poster;
+    BottomEventSheetFragment bottomFrag;
     //int position;
 
 
@@ -47,17 +48,25 @@ public class DetailEventActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_detail);
         btn_event_enter = findViewById(R.id.btn_event_enter);
+        Intent intent = getIntent();
+        event_id = intent.getExtras().getString("event_id"); // 인텐트로 넘긴 event_id
+
 
         btn_event_enter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BottomSheetDialogFragment bottomSheetDialogFragment = new BottomEventSheetFragment();
+                BottomEventSheetFragment bottomSheetDialogFragment = new BottomEventSheetFragment();
                 bottomSheetDialogFragment.show(getSupportFragmentManager(), bottomSheetDialogFragment.getTag());
+
+                //번들객체 생성, text값 저장
+                Bundle bundle = new Bundle();
+                bundle.putString("event_id",event_id);
+
+                // fragment로 번들 전달
+                bottomSheetDialogFragment.setArguments(bundle);
             }
         });
 
-        Intent intent = getIntent();
-        event_id = intent.getExtras().getString("event_id"); // 인텐트로 넘긴 event_id
 
         title_event = findViewById(R.id.title_event_detail);
         num_of_people =findViewById(R.id.number_people_event_detail_real);
@@ -69,6 +78,9 @@ public class DetailEventActivity extends AppCompatActivity {
 
         Log.d("이벤트 id", event_id);
         sendRequest();
+
+
+
 
 
 
@@ -113,7 +125,6 @@ public class DetailEventActivity extends AppCompatActivity {
                                     .load(img) //URL, URI 등등 이미지를 받아올 경로
                                     .centerCrop()
                                     .into(poster); //받아온 이미지를 받을 공간(ex. ImageView)
-
 
 
 

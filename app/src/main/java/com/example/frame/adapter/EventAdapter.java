@@ -42,7 +42,15 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
     private OnPostListener onPostListener;
 
 
-    public EventAdapter(Context context, Activity activity, ArrayList eventList, EventAdapter.RecyclerViewClickListener clickListener){
+//    public EventAdapter(Context context, Activity activity, ArrayList eventList, EventAdapter.RecyclerViewClickListener clickListener){
+//        this.context = context;
+//        this.activity = activity;
+//        this.eventList = eventList;
+//        this.clickListener = clickListener;
+//
+//    }
+
+    public EventAdapter(Context context, ArrayList eventList, EventAdapter.RecyclerViewClickListener clickListener){
         this.context = context;
         this.activity = activity;
         this.eventList = eventList;
