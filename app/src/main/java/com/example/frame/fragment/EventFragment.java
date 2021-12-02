@@ -29,6 +29,7 @@ import com.example.frame.etc.AppHelper;
 import com.example.frame.etc.DataEvent;
 import com.example.frame.etc.DataFeed;
 import com.example.frame.etc.DataFeedImg;
+import com.example.frame.etc.SessionManager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.json.JSONArray;
@@ -50,6 +51,9 @@ public class EventFragment extends Fragment {
     private ArrayList<DataEvent> eventList = new ArrayList<>();
     RecyclerView.Adapter adapter;
     private EventAdapter.RecyclerViewClickListener clickListener;
+    SessionManager sessionManager;
+    private String role;
+
 
     public EventFragment() {
         // Required empty public constructor
@@ -75,7 +79,19 @@ public class EventFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
        View view = inflater.inflate(R.layout.fragment_event, container, false);
-       btn_add_event = view.findViewById(R.id.btn_add_event);
+
+       //버튼 보이고, 안보이고...!!
+        sessionManager = new SessionManager(getContext());
+        HashMap<String,String> user = sessionManager.getUserDetail();
+        role = user.get(sessionManager.ROLE);
+       //만약 쉐어드 role이 admin 이면 버튼 보이고, 그렇지 않으면 버튼 보이지 않는다.
+        btn_add_event = view.findViewById(R.id.btn_add_event);
+        if(role.equals("admin")){
+            btn_add_event.setVisibility(View.VISIBLE);
+        }else {
+            btn_add_event.setVisibility(View.GONE);
+        }
+
        btn_add_event.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View v) {
@@ -184,7 +200,7 @@ public class EventFragment extends Fragment {
         clickListener = new EventAdapter.RecyclerViewClickListener() {
             @Override
             public void onClick(View v, int position) {
-                Intent intent = new Intent(getActivity(), EventRegisterActivity.class);
+                Intent intent = new Intent(getActivity(),DetailEventActivity.class);
                 intent.putExtra("event_id",eventList.get(position).getEvent_id());
                 startActivity(intent);
             }

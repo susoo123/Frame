@@ -160,6 +160,7 @@
 <!--    </androidx.cardview.widget.CardView>-->
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/btn_qna"
         android:layout_marginTop="20dp"
         android:layout_width="match_parent"
         android:layout_marginBottom="100dp"

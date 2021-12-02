@@ -8,7 +8,7 @@
     android:orientation="vertical"
     android:scrollbarFadeDuration="0"
     android:scrollbarSize="0dp"
-    android:background="@color/white"
+    android:background="@color/black"
     >
 
 
@@ -19,10 +19,9 @@
         android:layout_marginTop="40dp"
         android:layout_marginLeft="10dp"
         android:text="이벤트 관리"
-        android:background="@color/white"
         android:textSize="25dp"
         android:textStyle="bold"
-        android:textColor="@color/black"
+        android:textColor="@color/white"
 
         />
 
@@ -32,7 +31,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_marginTop="19dp"
-        android:background="#efefef"
+        android:background="#3E3D3D"
         android:scrollbarFadeDuration="0"
         android:scrollbarSize="0dp"
         android:scrollbarThumbVertical="@color/colorG"

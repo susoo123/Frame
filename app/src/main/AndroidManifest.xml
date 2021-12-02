@@ -29,6 +29,7 @@
         <activity android:name=".EditFeedActivity"></activity>
 
         <activity android:name=".MainActivity">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -42,14 +43,11 @@
         <activity android:name=".LoginActivity">
 
 
-
         </activity>
 
         <activity android:name=".ForgetPWActivity"></activity>
         <activity android:name=".ResetPasswordActivity"></activity>
         <activity android:name=".Detail_exhibition">
-
-
         </activity>
 
         <activity android:name=".AddFeedActivity">
@@ -84,6 +82,24 @@
         <activity android:name=".EventRegisterActivity">
 
         </activity>
+
+        <activity android:name=".EventWinnerListActivity">
+
+        </activity>
+
+        <activity android:name=".EnterActivity">
+
+
+        </activity>
+
+        <activity android:name=".ChatActivity">
+        </activity>
+
+        <activity android:name=".ChatRoomListActivity">
+
+        </activity>
+
+
 
 
         <meta-data

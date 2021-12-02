@@ -12,10 +12,12 @@ import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
+import com.example.frame.ChatRoomListActivity;
 import com.example.frame.EditProfileActivity;
 import com.example.frame.EventManageActivity;
 import com.example.frame.R;
 import com.example.frame.etc.SessionManager;
+import com.example.frame.ChatActivity;
 
 import java.util.HashMap;
 
@@ -26,9 +28,10 @@ import java.util.HashMap;
  */
 public class MypageAdminFragment extends Fragment {
     TextView  btn_go_edit_profile;
-    CardView mypage_img,btn_management_event;
+    private CardView mypage_img,btn_management_event,btn_qna;
     ImageView profile_img_iv;
     TextView profile_name;
+    private String username;
 
     public MypageAdminFragment() {
         // Required empty public constructor
@@ -58,18 +61,19 @@ public class MypageAdminFragment extends Fragment {
        profile_img_iv = view.findViewById(R.id.profile_img_iv);
        profile_name = view.findViewById(R.id.textView);
         btn_management_event = view.findViewById(R.id.btn_management_event);
+        btn_qna = view.findViewById(R.id.btn_qna_A);
 
         SessionManager sessionManager = new SessionManager(getContext());
         HashMap<String,String> user = sessionManager.getUserDetail();
         String profile_img = user.get(sessionManager.PROFILE_IMG_PATH);
-        String name = user.get(sessionManager.NAME);
+        username = user.get(sessionManager.NAME);
 
         Glide.with(getContext())
                 .load(profile_img)
                 .centerCrop()
                 .into(profile_img_iv);
 
-        profile_name.setText(name);
+        profile_name.setText(username);
 
         View.OnClickListener clickListener = new View.OnClickListener() {
             @Override
@@ -86,6 +90,12 @@ public class MypageAdminFragment extends Fragment {
                         startActivity(new Intent(getActivity(), EventManageActivity.class));
                         break;
 
+                    case R.id.btn_qna_A:
+                        Intent intent = new Intent(getActivity(), ChatRoomListActivity.class);
+                        intent.putExtra("username", "관리자");
+                        startActivity(intent);
+                        break;
+
                 }
             }
         };
@@ -96,6 +106,7 @@ public class MypageAdminFragment extends Fragment {
         mypage_img.setOnClickListener(clickListener);
         btn_go_edit_profile.setOnClickListener(clickListener);
         btn_management_event.setOnClickListener(clickListener);
+        btn_qna.setOnClickListener(clickListener);
 
 
         return view;

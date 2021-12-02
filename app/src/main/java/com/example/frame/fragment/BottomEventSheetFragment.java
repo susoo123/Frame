@@ -5,6 +5,7 @@ import android.util.Log;
 
 import android.os.Bundle;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -18,6 +19,8 @@ import com.android.volley.error.VolleyError;
 import com.android.volley.request.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
+import com.example.frame.DetailEventActivity;
+import com.example.frame.LoginActivity;
 import com.example.frame.R;
 import com.example.frame.etc.AppHelper;
 import com.example.frame.etc.DataEvent;
@@ -37,6 +40,7 @@ public class BottomEventSheetFragment extends BottomSheetDialogFragment {
     private static String URL_after_click_event_btn ="http://ec2-52-79-204-252.ap-northeast-2.compute.amazonaws.com/after_click_event_btn.php";
     private ArrayList<DataEvent> eventList = new ArrayList<>();
     private String user_id,event_id;
+    private AlertDialog dialog;
 
 
 
@@ -92,6 +96,12 @@ public class BottomEventSheetFragment extends BottomSheetDialogFragment {
 
 
                 sendRequest();
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                dialog = builder.setMessage("응모했습니다.")
+                        .setPositiveButton("확인",null )
+                        .create();
+                dialog.show();
             }
         });
 

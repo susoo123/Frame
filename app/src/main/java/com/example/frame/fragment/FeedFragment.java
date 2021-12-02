@@ -21,6 +21,7 @@ import com.android.volley.error.VolleyError;
 import com.android.volley.request.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.frame.AddFeedActivity2;
+import com.example.frame.DetailEventActivity;
 import com.example.frame.DetailFeedActivity;
 import com.example.frame.R;
 import com.example.frame.adapter.FeedAdapter;
@@ -225,8 +226,16 @@ public class FeedFragment extends Fragment {
         clickListener = new FeedAdapter.RecyclerViewClickListener() {
             @Override
             public void onClick(View v, int position) {
+                //Intent intent = new Intent(getActivity(), DetailFeedActivity.class);
+                //intent.putExtra("userName",feedList.get(position).getWriter());
+//                intent.putExtra("feed_id",feed_id);
+
+
+
                 Intent intent = new Intent(getActivity(), DetailFeedActivity.class);
-                intent.putExtra("userName",feedList.get(position).getWriter());
+                intent.putExtra("feed_id",feedList.get(position).getFeed_uid());
+
+                Log.d("feed_id 확인!!", feedList.get(position).getFeed_uid());
                 startActivity(intent);
             }
         };

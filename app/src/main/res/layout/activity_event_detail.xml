@@ -35,115 +35,144 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="250dp"
+                android:layout_height="wrap_content"
                 android:orientation="vertical"
                 >
 
-                <TextView
-                    android:id="@+id/title_event_detail"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="24dp"
-                    android:layout_marginTop="28dp"
-                    android:text="제목"
-                    android:textStyle="bold"
-                    android:textSize="20sp"
+                    android:orientation="vertical"
+                    android:layout_marginVertical="30dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <TextView
+                        android:id="@+id/title_event_detail"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="24dp"
+                        android:layout_marginTop="28dp"
+                        android:text="제목"
+                        android:gravity="center"
+                        android:textSize="23sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="10dp"
+                        />
 
 
-                <TextView
-                    android:id="@+id/date_event_detail"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="24dp"
-                    android:layout_marginTop="32dp"
-                    android:text="전시기간"
-                    android:textSize="20sp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/title_event_detail" />
+                    <LinearLayout
+                        android:id="@+id/linear_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:id="@+id/date_event_detail"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="24dp"
+                            android:text="전시기간"
+                            android:textSize="20sp"
+                            android:textColor="@color/black"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/title_event_detail" />
 
-                <TextView
-                    android:id="@+id/number_people_event_detail"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="24dp"
-                    android:layout_marginTop="20dp"
-                    android:text="당첨인원"
-                    android:textSize="20sp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/date_event_detail" />
+                        <TextView
+                            android:id="@+id/start_date_event_detail2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="2021년 1월 1일"
+                            android:textSize="15sp"
+                            android:layout_marginStart="10dp"
+                           />
+                        <TextView
+                            android:id="@+id/wave2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="5dp"
+                            android:text="~"
+                            android:textSize="15sp"
+                           />
+                        <TextView
+                            android:id="@+id/end_date_event_detail2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="2021년 12월 31일"
+                            android:textSize="15sp"
+                           />
 
-                <TextView
-                    android:id="@+id/period_event_detail"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="24dp"
-                    android:layout_marginTop="20dp"
-                    android:text="이벤트 기한"
-                    android:textSize="20sp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/number_people_event_detail" />
+                    </LinearLayout>
 
-                <TextView
-                    android:id="@+id/date_event_detail_real"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="40dp"
-                    android:layout_marginTop="36dp"
-                    android:text="2021-0-0"
-                    android:textSize="15sp"
-                    app:layout_constraintStart_toEndOf="@+id/date_event_detail"
-                    app:layout_constraintTop_toBottomOf="@+id/title_event_detail" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:id="@+id/number_people_event_detail"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="24dp"
+                            android:text="당첨인원"
+                            android:textColor="@color/black"
+                            android:textSize="20sp"
+                            />
+                        <TextView
+                            android:id="@+id/number_people_event_detail_real"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="00"
+                            android:textSize="15sp"
+                            android:layout_marginStart="10dp"
+                           />
 
-                <TextView
-                    android:id="@+id/number_people_event_detail_real"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="44dp"
-                    android:layout_marginTop="28dp"
-                    android:text="00"
-                    android:textSize="15sp"
-                    app:layout_constraintStart_toEndOf="@+id/number_people_event_detail"
-                    app:layout_constraintTop_toBottomOf="@+id/date_event_detail_real" />
-
-
-                <TextView
-                    android:id="@+id/start_date_event_detail"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="28dp"
-                    android:text="2021년 1월 1일"
-                    android:textSize="15sp"
-                    app:layout_constraintStart_toEndOf="@+id/period_event_detail"
-                    app:layout_constraintTop_toBottomOf="@+id/number_people_event_detail_real" />
-
-                <TextView
-                    android:id="@+id/wave"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="64dp"
-                    android:layout_marginTop="28dp"
-                    android:text="~"
-                    android:textSize="15sp"
-                    app:layout_constraintEnd_toStartOf="@+id/end_date_event_detail"
-                    app:layout_constraintHorizontal_bias="0.857"
-                    app:layout_constraintStart_toEndOf="@+id/period_event_detail"
-                    app:layout_constraintTop_toBottomOf="@+id/number_people_event_detail_real" />
-
-                <TextView
-                    android:id="@+id/end_date_event_detail"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="32dp"
-                    android:layout_marginTop="28dp"
-                    android:text="2021년 12월 31일"
-                    android:textSize="15sp"
-                    app:layout_constraintStart_toEndOf="@+id/start_date_event_detail"
-                    app:layout_constraintTop_toBottomOf="@+id/number_people_event_detail_real" />
+                    </LinearLayout>
 
 
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:id="@+id/period_event_detail"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="24dp"
+                            android:text="이벤트 기한"
+                            android:textColor="@color/black"
+                            android:textSize="20sp"
+                           />
+
+
+                        <TextView
+                            android:id="@+id/start_date_event_detail"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="2021년 1월 1일"
+                            android:textSize="15sp"
+                            android:layout_marginStart="10dp"
+                           />
+                        <TextView
+                            android:id="@+id/wave"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="~"
+                            android:textSize="15sp"
+                            android:layout_marginHorizontal="5dp"
+                           />
+                        <TextView
+                            android:id="@+id/end_date_event_detail"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="2021년 12월 31일"
+                            android:textSize="15sp"
+                            />
+
+
+                    </LinearLayout>
+
+                </LinearLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>
 

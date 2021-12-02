@@ -4,10 +4,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
+import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.Request;
@@ -15,8 +17,10 @@ import com.android.volley.error.AuthFailureError;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.frame.adapter.ChatRoomListAdapter;
 import com.example.frame.adapter.EventAdapter;
 import com.example.frame.etc.AppHelper;
+import com.example.frame.etc.DataChat;
 import com.example.frame.etc.DataEvent;
 
 import org.json.JSONArray;
@@ -27,35 +31,33 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-
-
-
-//이벤트 관리 액티비티 // 이벤트 목록들이 뜸.
-public class EventManageActivity extends AppCompatActivity {
-
+public class ChatRoomListActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
-    private static String URL_read_event ="http://ec2-52-79-204-252.ap-northeast-2.compute.amazonaws.com/read_event.php";
-    private ArrayList<DataEvent> eventList = new ArrayList<>();
+    private static String URL_read_chat_room ="http://ec2-52-79-204-252.ap-northeast-2.compute.amazonaws.com/read_chat_room_list.php";
+    private ArrayList<DataChat> dataChatArrayList = new ArrayList<>();
     RecyclerView.Adapter adapter;
-    private EventAdapter.RecyclerViewClickListener clickListener;
+    private ChatRoomListAdapter.RecyclerViewClickListener clickListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_event_management);
+        setContentView(R.layout.activity_chat_room_list);
 
         sendRequest();
-        init_rv_search();
+        init_rv_chat_list();
     }
 
-    private void init_rv_search(){
+    private void init_rv_chat_list(){
         //리사이클러뷰 관련
-        recyclerView = findViewById(R.id.rv_event);
-        recyclerView.setLayoutManager(new GridLayoutManager(this,2));
+        recyclerView = findViewById(R.id.chat_room_list_rv);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);//리사이클러뷰 세로로만드는 코드
+        recyclerView.setLayoutManager(layoutManager);
 
     }
+
     private void sendRequest() {
-        String url = URL_read_event;
+        String url = URL_read_chat_room;
         StringRequest request = new StringRequest(Request.Method.GET, url,
                 new com.android.volley.Response.Listener<String>() {
                     @Override
@@ -63,25 +65,23 @@ public class EventManageActivity extends AppCompatActivity {
                         try {
                             JSONObject jsonObject = new JSONObject(response);
                             //String success = jsonObject.getString("success");
-                            JSONArray jsonArray = jsonObject.getJSONArray("event");
+                            JSONArray jsonArray = jsonObject.getJSONArray("chatList");
                             //feed 어레이 풀기
                             for (int i = 0; i < jsonArray.length(); i++) {
                                 JSONObject object = jsonArray.getJSONObject(i);
-                                String event_title = object.getString("title");
-                                String event_start = object.getString("event_start_date");
-                                String event_end = object.getString("event_end_date");
-                                String num_people = object.getString("num_people");
-                                String contents = object.getString("contents");
-                                String img = object.getString("img");
-                                String event_id = object.getString("event_id");
+                                String user_id = object.getString("user_id");
+                                String user_name = object.getString("name");
+                                String chat_user_img = object.getString("profile_img");
+                                String chat_text = object.getString("chat_text_latest");
+                                String chat_date = object.getString("chat_date");
 
-                                eventList.add(new DataEvent(img,event_title,contents,event_start,event_end,num_people,event_id));
+                                dataChatArrayList.add(new DataChat(user_id,user_name,chat_user_img,chat_text,chat_date));
 
                             }
 
                             setOnClickListener();
                             //리사이클러뷰 클릭 이벤트 - 6. onClick 내에 리스너 set
-                            adapter = new EventAdapter(getApplicationContext(),eventList,clickListener);
+                            adapter = new ChatRoomListAdapter(getApplicationContext(),dataChatArrayList,clickListener);
                             recyclerView.setAdapter(adapter);
                             adapter.notifyDataSetChanged();
 
@@ -98,7 +98,7 @@ public class EventManageActivity extends AppCompatActivity {
                     @Override
                     public void onErrorResponse(VolleyError error){
 
-                        Log.d("soo1", "이벤트 에러 -> " + error.getMessage());
+                        Log.d("soo1", "chatRoomList 에러 -> " + error.getMessage());
 
                     }
                 }
@@ -120,16 +120,20 @@ public class EventManageActivity extends AppCompatActivity {
     }
 
     private void setOnClickListener() {
-        clickListener = new EventAdapter.RecyclerViewClickListener() {
+        clickListener = new ChatRoomListAdapter.RecyclerViewClickListener() {
             @Override
             public void onClick(View v, int position) {
-                Intent intent = new Intent(getApplicationContext(), EventRegisterActivity.class);
-//              Intent intent = new Intent(getApplicationContext(), EventWinnerListActivity.class);
-                intent.putExtra("event_id",eventList.get(position).getEvent_id());
+                Intent intent = new Intent(getApplicationContext(), ChatActivity.class);
+                intent.putExtra("user_id",dataChatArrayList.get(position).getUser_id());
                 startActivity(intent);
             }
         };
     }
+
+
+
+
+
 
 
 }

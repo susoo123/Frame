@@ -1,26 +1,23 @@
 package com.example.frame.fragment;
+import android.util.Log;
 
 import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.frame.EditProfileActivity;
 import com.example.frame.R;
 import com.example.frame.etc.SessionManager;
-
-import org.w3c.dom.Text;
+import com.example.frame.ChatActivity;
 
 import java.util.HashMap;
 
@@ -34,6 +31,8 @@ public class MypageFragment extends Fragment {
     CardView mypage_img;
     ImageView profile_img_iv;
     TextView profile_name;
+    CardView btn_qna;
+    private String name_user;
 
     public MypageFragment() {
         // Required empty public constructor
@@ -62,18 +61,19 @@ public class MypageFragment extends Fragment {
        mypage_img = view.findViewById(R.id.mypage_img);
        profile_img_iv = view.findViewById(R.id.profile_img_iv);
        profile_name = view.findViewById(R.id.textView);
+       btn_qna = view.findViewById(R.id.btn_qna);
 
         SessionManager sessionManager = new SessionManager(getContext());
         HashMap<String,String> user = sessionManager.getUserDetail();
         String profile_img = user.get(sessionManager.PROFILE_IMG_PATH);
-        String name = user.get(sessionManager.NAME);
+        name_user = user.get(sessionManager.NAME);
 
         Glide.with(getContext())
                 .load(profile_img)
                 .centerCrop()
                 .into(profile_img_iv);
 
-        profile_name.setText(name);
+        profile_name.setText(name_user);
 
         View.OnClickListener clickListener = new View.OnClickListener() {
             @Override
@@ -86,12 +86,21 @@ public class MypageFragment extends Fragment {
 //                        ft.detach(getParentFragment()).attach(getParentFragment()).commit();
                         break;
 
+                    case R.id.btn_qna:
+                        Intent intent = new Intent(getActivity(), ChatActivity.class);
+                        intent.putExtra("username", name_user );
+                        Log.d("디버그태그", name_user);
+                        startActivity(intent);
+                        break;
+
+
                 }
             }
         };
         //버튼 클릭 이벤트
         mypage_img.setOnClickListener(clickListener);
         btn_go_edit_profile.setOnClickListener(clickListener);
+        btn_qna.setOnClickListener(clickListener);
 
 
         return view;

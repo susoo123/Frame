@@ -81,11 +81,6 @@ public class DetailEventActivity extends AppCompatActivity {
 
 
 
-
-
-
-
-
     }
 
 

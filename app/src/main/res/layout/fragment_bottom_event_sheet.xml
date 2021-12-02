@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:paddingHorizontal="32dp"
     android:paddingTop="24dp"
@@ -23,37 +23,81 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-    <ImageView
-        android:id="@+id/bottom_poster"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:src="@drawable/app_logo"/>
-<LinearLayout
+
+    <LinearLayout
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical">
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:text="당첨인원."
-        android:textColor="@android:color/black"
-        android:textSize="16sp" />
 
-    <TextView
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:text="전시일시."
-        android:textColor="@android:color/black"
-        android:textSize="16sp" />
-
-</LinearLayout>
+        android:orientation="horizontal"
+        >
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="응모인원."
+            android:textColor="@android:color/black"
+            android:textSize="16sp" />
 
         <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="5dp"
+            android:text="2명"
+            android:textColor="@color/colorP"
+            android:textSize="16sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="10dp"
+            android:text="(*최대 2인까지 응모 가능합니다.)"
+            android:textColor="@color/colorGrey"
+            android:textSize="10sp" />
+
+    </LinearLayout>
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="2021-8-30 ~" />
+            android:orientation="horizontal"
+            >
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:text="전시일시."
+                android:textColor="@android:color/black"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:text="2021년 10월 22일"
+                android:layout_marginLeft="5dp"
+                android:textColor="@color/colorP"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:text="까지"
+                android:layout_marginLeft="5dp"
+                android:textColor="@color/colorB"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
     </LinearLayout>
 
     <Button
@@ -63,6 +107,8 @@
         android:textStyle="bold"
         android:textSize="16sp"
         android:background="#B96BC6"
+        android:backgroundTint="@null"
+        app:backgroundTint="@null"
         style="@style/btnBackground"
         android:text="응모하기"/>
 

@@ -10,7 +10,6 @@
         android:id="@+id/item_searchFrag"
         android:layout_marginHorizontal="7dp"
         android:layout_marginTop="7dp"
-        app:cardCornerRadius="5dp"
         android:elevation="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
