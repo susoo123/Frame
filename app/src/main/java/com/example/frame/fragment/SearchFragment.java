@@ -184,16 +184,16 @@ public class SearchFragment extends Fragment implements SearchAdapter.ItemClickL
                     },
                 new com.android.volley.Response.ErrorListener() {
                     @Override
-                    public void onErrorResponse(VolleyError error){
+                    public void onErrorResponse(VolleyError error) {
 
-                            Log.d("soo1", "에러 -> " + error.getMessage());
+                    }
 
-                        }
+
                         }
                             ) {
 
             @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
+            protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
 
                 return params;

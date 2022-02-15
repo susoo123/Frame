@@ -238,13 +238,17 @@ public class LoginActivity extends AppCompatActivity {
                         Toast.makeText(LoginActivity.this, "로그인 에러2" + error.toString(),Toast.LENGTH_SHORT).show();
 
                     }
+
+
+
+
                 })
 
 
         {
 
             @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
+            protected Map<String, String> getParams() {
                 Map<String,String> params = new HashMap<>();
 
                 params.put("email",email);

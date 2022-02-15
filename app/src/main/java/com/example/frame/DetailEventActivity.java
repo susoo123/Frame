@@ -1,4 +1,7 @@
 package com.example.frame;
+
+import com.android.volley.error.VolleyError;
+import com.android.volley.request.StringRequest;
 import com.bumptech.glide.Glide;
 import android.util.Log;
 
@@ -13,9 +16,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.Request;
-import com.android.volley.error.AuthFailureError;
-import com.android.volley.error.VolleyError;
-import com.android.volley.request.StringRequest;
+
 import com.android.volley.toolbox.Volley;
 import com.example.frame.adapter.EventAdapter;
 import com.example.frame.etc.AppHelper;
@@ -87,6 +88,7 @@ public class DetailEventActivity extends AppCompatActivity {
     //볼리 통신으로 이벤트 아이디 보내기
     private void sendRequest() {
         String url = URL_read_detail_event;
+
         StringRequest request = new StringRequest(Request.Method.POST, url,
                 new com.android.volley.Response.Listener<String>() {
                     @Override
@@ -140,16 +142,18 @@ public class DetailEventActivity extends AppCompatActivity {
                 },
                 new com.android.volley.Response.ErrorListener() {
                     @Override
-                    public void onErrorResponse(VolleyError error){
-
-                        Log.d("soo1", "이벤트 에러 -> " + error.getMessage());
+                    public void onErrorResponse(VolleyError error) {
 
                     }
+
+
+
+
                 }
         ) {
 
             @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
+            protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
                 params.put("event_id",event_id);
                 Log.d("이벤트 아이디 전송 성공", event_id);

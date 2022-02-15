@@ -35,7 +35,6 @@ import com.android.volley.Response;
 //import com.android.volley.toolbox.StringRequest;
 
 
-import com.android.volley.error.AuthFailureError;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.StringRequest;
 import com.android.volley.toolbox.Volley;
@@ -245,16 +244,18 @@ SharedPreferences sharedPreferences;
                     @Override
                     public void onErrorResponse(VolleyError error) {
 
-                        Toast.makeText(EditProfileActivity.this, "프로필 에러2" + error.toString(),Toast.LENGTH_SHORT).show();
-
                     }
+
+
+
+
                 })
 
 
         {
 
             @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
+            protected Map<String, String> getParams() {
                 Map<String,String> params = new HashMap<>();
 
                 params.put("email",sEmail);
@@ -377,19 +378,20 @@ SharedPreferences sharedPreferences;
                         }
                     }
                 },
-                new Response.ErrorListener() {//에러 콜백
+                new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
 
-                        Toast.makeText(EditProfileActivity.this, "에러" + error.toString(),Toast.LENGTH_SHORT).show();
-
                     }
+
+
+
                 })
         {
 
             //@org.jetbrains.annotations.Nullable
             @Override //클라이언트 데이터 서버로 전송하기 위해
-            protected Map<String, String> getParams() throws AuthFailureError {
+            protected Map<String, String> getParams() {
 
                 //서버에 전송할 데이터 맵 객체에 담아 변환.
                 Map<String,String> params = new HashMap<>();

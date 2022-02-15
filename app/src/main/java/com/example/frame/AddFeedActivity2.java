@@ -35,8 +35,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+
+
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.SimpleMultiPartRequest;
+
 import com.android.volley.toolbox.Volley;
 import com.example.frame.adapter.AddFeedImgAdapter;
 import com.example.frame.etc.SessionManager;
@@ -56,9 +59,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class AddFeedActivity2 extends AppCompatActivity {
-
-    private static String URL_create_feed = "http://ec2-52-79-204-252.ap-northeast-2.compute.amazonaws.com/create_feed.php";
-    private static String URL_create_feed2 = "http://ec2-52-79-204-252.ap-northeast-2.compute.amazonaws.com/create_feed2.php";
 
     private EditText feed_contents;
     private ImageButton btn_feed_camera;
@@ -277,8 +277,12 @@ public class AddFeedActivity2 extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d("soo", "전송 실패!!");
+
             }
+
+
+
+
         }); //SimpleMultiPartRequest 끝.
 
 

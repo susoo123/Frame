@@ -31,6 +31,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+
+//import com.android.volley.request.SimpleMultiPartRequest;
+//import com.android.volley.request.SimpleMultiPartRequest;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.SimpleMultiPartRequest;
 import com.android.volley.toolbox.Volley;
@@ -273,6 +276,7 @@ public class AddEventActivity extends AppCompatActivity {
         //content provider가 안드로이드 시스템의 각종 설정값이나 디비에 접근하게 해준다면 반환하는 브릿지 역할은 content Resolver가 하게됨.
         Cursor cursor = getContentResolver().query(uri, null, null, null, null );
         cursor.moveToNext();
+        //String path = cursor.getString( cursor.getColumnIndex( "_data" ) );
         String path = cursor.getString( cursor.getColumnIndex( "_data" ) );
         cursor.close();
 
@@ -384,8 +388,11 @@ public class AddEventActivity extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d("soo", "전송 실패!!");
+
             }
+
+
+
         }); //SimpleMultiPartRequest 끝.
 
 

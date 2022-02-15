@@ -76,7 +76,7 @@ public class EventRegisterActivity extends AppCompatActivity {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(adapter.getSelected().size() > 0){
+                if(adapter.getSelected().size() >=0){
                     //getting a list of item selected
                     StringBuilder stringBuilder = new StringBuilder();
 
@@ -97,10 +97,10 @@ public class EventRegisterActivity extends AppCompatActivity {
                     //당첨자 선택 버튼 클릭하면 당첨자 목록 액티비티로 넘어감(EventWinnerListActivity)
                     Intent intent = new Intent(getApplicationContext(), EventWinnerListActivity.class);
                     intent.putExtra("event_id",event_id);
-                    intent.putExtra("winner_id",winner_id);
-//                    intent.putExtra("winner_id",stringBuilder.toString().trim());
+                    intent.putExtra("winnerList",winnerList);
+
                     startActivity(intent);
-                    //showToast(stringBuilder.toString().trim());
+
                 }else {
                     showToast("선택되지 않았습니다.");
                     Log.e("오류태그", "선택되지 않았습니다.");
@@ -112,6 +112,8 @@ public class EventRegisterActivity extends AppCompatActivity {
 
     }
 
+
+    //디비를 Y로 바꿔주기
     private void send_winner() {
 
         String url = URL_send_winner;
@@ -124,24 +126,24 @@ public class EventRegisterActivity extends AppCompatActivity {
                             String success = jsonObject.getString("success");
                             JSONArray jsonArray = jsonObject.getJSONArray("picked");
 
-                            for (int i = 0; i < jsonArray.length(); i++) {
+                            for (int i = 0; i <= jsonArray.length(); i++) {
                                 JSONObject object = jsonArray.getJSONObject(i);
-//                                event_title = object.getString("title");
-//                                user_id = object.getString("user_id");
-//                                user_name = object.getString("user_name");
-//                                String user_email = object.getString("user_email");
-//
-//
-//                                entry.add(new DataRegister(user_id,user_name,user_email));
+                                event_title = object.getString("title");
+                                user_id = object.getString("user_id");
+                                user_name = object.getString("user_name");
+                                String user_email = object.getString("user_email");
+
+
+                                entry.add(new DataRegister(user_id,user_name,user_email));
 
                             }
 
-//                            event_title_tv.setText(event_title);
-//
-//                            //리사이클러뷰 클릭 이벤트 - 6. onClick 내에 리스너 set
-//                            adapter = new EventRegisterAdapter(getApplicationContext(),entry);
-//                            recyclerView.setAdapter(adapter);
-//                            adapter.notifyDataSetChanged();
+                            event_title_tv.setText(event_title);
+
+                            //리사이클러뷰 클릭 이벤트 - 6. onClick 내에 리스너 set
+                            adapter = new EventRegisterAdapter(getApplicationContext(),entry);
+                            recyclerView.setAdapter(adapter);
+                            adapter.notifyDataSetChanged();
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -154,20 +156,21 @@ public class EventRegisterActivity extends AppCompatActivity {
                 },
                 new com.android.volley.Response.ErrorListener() {
                     @Override
-                    public void onErrorResponse(VolleyError error){
-
-                        Log.d("soo1", "이벤트 에러 -> " + error.getMessage());
+                    public void onErrorResponse(VolleyError error) {
 
                     }
+
+
+
                 }
         ) {
 
             @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
+            protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
                 params.put("event_id",event_id);
                 //params.put("winner_id",winner_id);
-
+                Log.e("event_id 로그확인", event_id);
 
                 String winnerData = new Gson().toJson(winnerList);
                 params.put("winnerList", winnerData);
@@ -190,28 +193,8 @@ public class EventRegisterActivity extends AppCompatActivity {
 
     }
 
-    //9.다중선택리사이클러뷰
-//    private void CreateListOfData() {
-//
-//        entry = new ArrayList<>();
-//
-//        for (int i = 0; i < 20; i++){
-//            DataRegister dataRegister = new DataRegister();
-//            dataRegister.setUser_id("userName" + (i+1));
-//
-////            //showing at least one selection
-////            if(i == 0){
-////                dataRegister.setChecked(true);
-////            }
-//
-//            entry.add(dataRegister);
-//
-//        }
-//
-//        adapter.setEntry(entry);
-//
-//    }
 
+    //이벤트 응모한 사람 리사이클러뷰에 띄우는 것
     private void sendRequest() {
         String url = URL_read_register;
         StringRequest request = new StringRequest(Request.Method.POST, url,
@@ -253,16 +236,18 @@ public class EventRegisterActivity extends AppCompatActivity {
                 },
                 new com.android.volley.Response.ErrorListener() {
                     @Override
-                    public void onErrorResponse(VolleyError error){
-
-                        Log.d("soo1", "이벤트 에러 -> " + error.getMessage());
+                    public void onErrorResponse(VolleyError error) {
 
                     }
+
+
+
+
                 }
         ) {
 
             @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
+            protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
                 params.put("event_id",event_id);
 

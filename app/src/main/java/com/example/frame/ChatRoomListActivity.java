@@ -13,7 +13,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.Request;
-import com.android.volley.error.AuthFailureError;
+
+
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.StringRequest;
 import com.android.volley.toolbox.Volley;
@@ -74,8 +75,9 @@ public class ChatRoomListActivity extends AppCompatActivity {
                                 String chat_user_img = object.getString("profile_img");
                                 String chat_text = object.getString("chat_text_latest");
                                 String chat_date = object.getString("chat_date");
+                                String type = object.getString("type");
 
-                                dataChatArrayList.add(new DataChat(user_id,user_name,chat_user_img,chat_text,chat_date));
+                                dataChatArrayList.add(new DataChat(user_id,user_name,chat_user_img,chat_text,chat_date,type));
 
                             }
 
@@ -96,16 +98,18 @@ public class ChatRoomListActivity extends AppCompatActivity {
                 },
                 new com.android.volley.Response.ErrorListener() {
                     @Override
-                    public void onErrorResponse(VolleyError error){
-
-                        Log.d("soo1", "chatRoomList 에러 -> " + error.getMessage());
+                    public void onErrorResponse(VolleyError error) {
 
                     }
+
+
+
+
                 }
         ) {
 
             @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
+            protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
 
                 return params;
@@ -123,7 +127,7 @@ public class ChatRoomListActivity extends AppCompatActivity {
         clickListener = new ChatRoomListAdapter.RecyclerViewClickListener() {
             @Override
             public void onClick(View v, int position) {
-                Intent intent = new Intent(getApplicationContext(), ChatActivity.class);
+                Intent intent = new Intent(getApplicationContext(), ChatActivity2.class);
                 intent.putExtra("user_id",dataChatArrayList.get(position).getUser_id());
                 startActivity(intent);
             }

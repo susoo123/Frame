@@ -208,20 +208,22 @@ public class RegisterActivity extends AppCompatActivity {
                         }
                     }
                 },
-                new Response.ErrorListener() {//에러 콜백
+                new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(RegisterActivity.this, "에러" + error.toString(),Toast.LENGTH_SHORT).show();
                         loading.setVisibility(View.GONE);
                         btn_register.setVisibility(View.VISIBLE);
-
                     }
+
+
+
                 })
         {
 //            @Nullable
 //            @org.jetbrains.annotations.Nullable
             @Override //클라이언트 데이터 서버로 전송하기 위해
-            protected Map<String, String> getParams() throws AuthFailureError {
+            protected Map<String, String> getParams() {
 
                 //서버에 전송할 데이터 맵 객체에 담아 변환.
                 Map<String,String> params = new HashMap<>();

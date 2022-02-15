@@ -27,8 +27,9 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.error.AuthFailureError;
+
+//import com.android.volley.request.StringRequest;
+//import com.android.volley.toolbox.StringRequest;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.StringRequest;
 import com.android.volley.toolbox.Volley;
@@ -190,6 +191,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
         String user_img = feedList.get(position).getUserImg();
         ArrayList imgList = feedList.get(position).getDataFeedImgList();
 
+
         feed_uid = feedList.get(position).getFeed_uid();
         Log.e("soo","feed_uid 확인1 : " + feed_uid );
 
@@ -205,6 +207,8 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
 
         //리사이클러뷰 어댑터 set
         ImageSliderInFeedAdapter imageSliderInFeedAdapter = new ImageSliderInFeedAdapter(context,imgList);
+
+
         //holder.imageRecyclerview.setHasFixedSize(true);
         // holder.imageRecyclerview.addItemDecoration(new LinePagerIndicatorDecoration()); //indicator 달기
         holder.imageRecyclerview.setLayoutManager(new LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false));
@@ -257,6 +261,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
 
             //리사이클러뷰 연결
             imageRecyclerview =itemView.findViewById(R.id.item_feed_image_rv);
+
 
 
             item_feed_contents = itemView.findViewById(R.id.item_feed_contents);
@@ -411,16 +416,18 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
                 },
                 new com.android.volley.Response.ErrorListener() {
                     @Override
-                    public void onErrorResponse(VolleyError error){
-
-                        Log.d("soo1", "에러 -> " + error.getMessage());
+                    public void onErrorResponse(VolleyError error) {
 
                     }
+
+
+
+
                 }
         ) {
 
             @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
+            protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
                 params.put("feed_uid",feed_uid2);
                 Log.e("soo","feed_uid 확인2 : " + feed_uid2 );

@@ -35,9 +35,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
-import com.android.volley.error.AuthFailureError;
+
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.SimpleMultiPartRequest;
+
 import com.android.volley.request.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
@@ -55,6 +56,7 @@ import com.karumi.dexter.listener.single.PermissionListener;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Comment;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -109,6 +111,7 @@ public class EditFeedActivity extends AppCompatActivity {
 
         //피드 정보 가져오기
         displayFeed(feed_id);
+
 
 
         //피드 업로드 버튼 누르면 실행
@@ -302,8 +305,12 @@ public class EditFeedActivity extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d("soo", "전송 실패!!");
+
             }
+
+
+
+
         }); //SimpleMultiPartRequest 끝.
 
 
@@ -492,16 +499,18 @@ public class EditFeedActivity extends AppCompatActivity {
                     @Override
                     public void onErrorResponse(VolleyError error) {
 
-                        Toast.makeText(EditFeedActivity.this, "피드 가져오기 에러2" + error.toString(),Toast.LENGTH_SHORT).show();
-
                     }
+
+
+
+
                 })
 
 
         {
 
             @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
+            protected Map<String, String> getParams() {
                 Map<String,String> params = new HashMap<>();
 
                 params.put("feed_id",feed_id3);

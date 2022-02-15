@@ -14,7 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.android.volley.Request;
-import com.android.volley.error.AuthFailureError;
+
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.StringRequest;
 import com.android.volley.toolbox.Volley;
@@ -139,16 +139,18 @@ public class BottomEventSheetFragment extends BottomSheetDialogFragment {
                 },
                 new com.android.volley.Response.ErrorListener() {
                     @Override
-                    public void onErrorResponse(VolleyError error){
-
-                        Log.d("soo1", "이벤트 에러 -> " + error.getMessage());
+                    public void onErrorResponse(VolleyError error) {
 
                     }
+
+
+
+
                 }
         ) {
 
             @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
+            protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
                 params.put("user_id",user_id);
                 params.put("event_id",event_id);

@@ -190,16 +190,16 @@ public class ForgetPWActivity extends AppCompatActivity {
                     @Override
                     public void onErrorResponse(VolleyError error) {
 
-                        Toast.makeText(ForgetPWActivity.this, "비밀번호 변경 이메일 인증 에러" + error.toString(),Toast.LENGTH_SHORT).show();
-                        loading.setVisibility(View.GONE);
-                        btn_sendPWEmail.setVisibility(View.VISIBLE);
-
                     }
+
+
+
+
                 })
         {
 
             @Override //클라이언트 데이터 서버로 전송하기 위해
-            protected Map<String, String> getParams() throws AuthFailureError {
+            protected Map<String, String> getParams() {
 
                 //서버에 전송할 데이터 맵 객체에 담아 변환.
                 Map<String,String> params = new HashMap<>();

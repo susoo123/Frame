@@ -25,13 +25,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.error.AuthFailureError;
-import com.android.volley.error.VolleyError;
-import com.android.volley.request.StringRequest;
-import com.android.volley.toolbox.Volley;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
@@ -87,11 +81,11 @@ public class ChatRoomListAdapter extends RecyclerView.Adapter<ChatRoomListAdapte
     }
 
 
-    public void SetDataChat(ArrayList<DataChat> dataChat){
-        this.dataChat = new ArrayList<>();
-        this.dataChat = dataChat;
-        notifyDataSetChanged();
-    }
+//    public void SetDataChat(ArrayList<DataChat> dataChat){
+//        this.dataChat = new ArrayList<>();
+//        this.dataChat = dataChat;
+//        notifyDataSetChanged();
+//    }
 
 
 
@@ -112,11 +106,14 @@ public class ChatRoomListAdapter extends RecyclerView.Adapter<ChatRoomListAdapte
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
 
+
+
         String chat_time = dataChat.get(position).getChat_date();
         String user_img = dataChat.get(position).getChat_user_img();
         String user_id = dataChat.get(position).getUser_id();
         String chat_text = dataChat.get(position).getChat_text();
         String user_name = dataChat.get(position).getUser_name();
+        String type = dataChat.get(position).getType();
 
 
 
@@ -150,8 +147,12 @@ public class ChatRoomListAdapter extends RecyclerView.Adapter<ChatRoomListAdapte
                     }
                 }).into(holder.iv_chat_room_img);
 
-        //9번
-        holder.setData(user_name,chat_text,chat_time);
+        //미리보기에 뜰 때 이미지 파일은 주소가 그대로 나오는게 아니라 (사진)으로 뜨도록!
+        if(type.equals("0")) {
+            holder.setData(user_name, chat_text, chat_time);
+        } else {
+            holder.setData(user_name, "(사진)", chat_time);
+        }
 
 
     }

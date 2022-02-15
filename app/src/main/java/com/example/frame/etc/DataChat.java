@@ -10,6 +10,7 @@ public class DataChat implements Serializable {
     private String chat_date; //채팅 날짜
     private String chat_user_img; //유저 이미지
     private String chat_text;//채팅 내용
+    private String type;//채팅 내용이 텍스트(0)인지 이미지(1)인지
 
     //model class
     private boolean isChecked = false;
@@ -26,16 +27,25 @@ public class DataChat implements Serializable {
 
     }
 
-    public DataChat(String user_id, String user_name, String chat_user_img,String chat_text,String chat_date) {
+
+
+    public DataChat(String user_id, String user_name, String chat_user_img,String chat_text,String chat_date,String type) {
         this.user_id = user_id;
         this.user_name = user_name;
         this.chat_user_img = chat_user_img;
         this.chat_text = chat_text;
         this.chat_date = chat_date;
+        this.type = type;
 
     }
 
+    public String getType() {
+        return type;
+    }
 
+    public void setType(String type) {
+        this.type = type;
+    }
 
     public String getUser_id() {
         return user_id;

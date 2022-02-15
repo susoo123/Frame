@@ -125,7 +125,7 @@
         android:id="@+id/btn_register"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/btnblock"
+        android:background="@drawable/btnblack"
         android:gravity="center"
         android:text="@string/sign_up"
         android:textColor="@color/white"

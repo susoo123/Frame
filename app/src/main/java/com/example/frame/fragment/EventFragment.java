@@ -101,6 +101,7 @@ public class EventFragment extends Fragment {
 
 
         sendRequest();
+
         init_rv_search(view);
 
 
@@ -173,16 +174,18 @@ public class EventFragment extends Fragment {
                 },
                 new com.android.volley.Response.ErrorListener() {
                     @Override
-                    public void onErrorResponse(VolleyError error){
-
-                        Log.d("soo1", "이벤트 에러 -> " + error.getMessage());
+                    public void onErrorResponse(VolleyError error) {
 
                     }
+
+
+
+
                 }
         ) {
 
             @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
+            protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
 
                 return params;

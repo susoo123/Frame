@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 //import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -46,14 +47,17 @@ import java.util.Map;
 public class FeedFragment extends Fragment {
 
 
+   private static String URL_read_comment_num = "http://ec2-52-79-204-252.ap-northeast-2.compute.amazonaws.com/read_comment_num.php";
    private static String URL_read_feed = "http://ec2-52-79-204-252.ap-northeast-2.compute.amazonaws.com/read_feed.php";
+
    private FloatingActionButton btn_add_feed;
    RecyclerView recyclerView;
-   private String feed_writer, feed_contents, feed_img, feed_time, feed_profile_img, feed_id, feed_user_id,feed_uid;
+   private String  feed_writer, feed_contents, feed_img, feed_time, feed_profile_img, feed_id, feed_user_id,feed_uid;
    RecyclerView.Adapter adapter;
    private ArrayList<DataFeed> feedList = new ArrayList<>();
    private JSONArray imagejArray = new JSONArray();
    private ArrayList<DataFeedImg> imgDataArray;
+   private TextView feed_comment_num;
 
 
 
@@ -88,7 +92,7 @@ public class FeedFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_feed, container, false);
         btn_add_feed = view.findViewById(R.id.btn_add_feed);
-
+        feed_comment_num = view.findViewById(R.id.feed_comment_num);
 
 
 
@@ -198,16 +202,18 @@ public class FeedFragment extends Fragment {
                 },
                 new com.android.volley.Response.ErrorListener() {
                     @Override
-                    public void onErrorResponse(VolleyError error){
-
-                        Log.d("soo1", "에러 -> " + error.getMessage());
+                    public void onErrorResponse(VolleyError error) {
 
                     }
+
+
+
+
                 }
         ) {
 
             @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
+            protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
 
                 return params;
@@ -220,6 +226,61 @@ public class FeedFragment extends Fragment {
         AppHelper.requestQueue.add(request);
 
     }
+
+    //당첨자
+    private void sendCommentNum() {
+        String url = URL_read_comment_num;
+        StringRequest request = new StringRequest(Request.Method.POST, url,
+                new com.android.volley.Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+
+                            JSONArray jsonArray = new JSONArray(response);
+                            JSONObject object = jsonArray.getJSONObject(0);
+                            //jsonArray.get(0);
+                            Log.d("디버그태그", "jsonArray.get(0)확인: "+jsonArray.get(0));
+
+                            String num = object.getString("feed_comment_num");
+                            feed_comment_num.setText(num);
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        Log.d("soo1", "응답 -> " + response);
+                    }
+
+
+                },
+                new com.android.volley.Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                    }
+
+
+
+
+                }
+        ) {
+
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                //params.put("feed_id",feedList.get());
+
+                return params;
+
+            }
+        };
+
+        request.setShouldCache(false);
+        AppHelper.requestQueue = Volley.newRequestQueue(getContext()); // requestQueue 초기화 필수
+        AppHelper.requestQueue.add(request);
+
+    }
+
 
     //리사이클러뷰 클릭 이벤트 - 8. 프래그먼트에서 사용할 클릭리스너 메소드 만들기
     private void setOnClickListener() {
