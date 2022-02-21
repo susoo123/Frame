@@ -1,15 +1,20 @@
 package com.example.frame;
-import android.os.Message;
 
+import android.Manifest;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
+import android.os.Messenger;
+import android.os.RemoteException;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -19,26 +24,40 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
 import com.example.frame.adapter.ChatItemAdapter;
 import com.example.frame.etc.AppHelper;
 import com.example.frame.etc.DataChat;
 import com.example.frame.etc.DataChatItem;
 import com.example.frame.etc.SessionManager;
 import com.google.gson.JsonObject;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionDeniedResponse;
+import com.karumi.dexter.listener.PermissionGrantedResponse;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.single.PermissionListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -48,6 +67,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.security.auth.callback.CallbackHandler;
 
 public class ChatActivity2 extends AppCompatActivity {
     TextView textView;
@@ -74,15 +95,18 @@ public class ChatActivity2 extends AppCompatActivity {
     private ArrayList<Uri> feedImgArrayList = new ArrayList<Uri>();
     private ArrayList<Uri> urlList = new ArrayList<>();
     private static String URL = "http://ec2-52-79-204-252.ap-northeast-2.compute.amazonaws.com/send_img_chat.php";
-    boolean cBound;
+
     boolean isService = false; // 서비스 중인 확인용
 
     MyService myService;
 
+    private Messenger mServiceCallback = null;
+    //private Messenger mClientCallback = new Messenger(new CallbackHandler());
 
 
     private static String URL_read_chat = "http://ec2-52-79-204-252.ap-northeast-2.compute.amazonaws.com/read_chat.php";
 
+    private static String URL_send_img_chat = "http://ec2-52-79-204-252.ap-northeast-2.compute.amazonaws.com/send_img_chat.php";
 
     JsonObject joClientInfo;
     Intent socketIntent;
@@ -101,9 +125,18 @@ public class ChatActivity2 extends AppCompatActivity {
     PrintWriter sendWriter;
     RecyclerView.Adapter adapter;
     JSONObject jsonObject;
+    private int state = 0;
+    boolean cBound;
 
+    private Messenger mServiceMessenger = null;
+    private boolean mIsBound;
 
+    @Override
+      protected void onStart() {
+          super.onStart();
 
+          cBound = true;
+      }
 
 
     @Override
@@ -113,7 +146,7 @@ public class ChatActivity2 extends AppCompatActivity {
 
         textView = (TextView) findViewById(R.id.chat_user_name);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
-        //btn_camera = findViewById(R.id.chat_camera_btn);
+        btn_camera = findViewById(R.id.chat_camera_btn);
 
         inputChat = (EditText) findViewById(R.id.message);
         chatbutton = (Button) findViewById(R.id.chatbutton);
@@ -126,6 +159,9 @@ public class ChatActivity2 extends AppCompatActivity {
         Log.d("UserID", UserID);
         mHandler2 = new Handler();
 
+        //setStartService();
+
+        sendMessageToService("from CA2");
 
         chatView = findViewById(R.id.chatRView);
 
@@ -146,17 +182,23 @@ public class ChatActivity2 extends AppCompatActivity {
             user_id = intent.getExtras().getString("user_id"); //관리자가 클릭한 방의 유저 아이디를
         }
 
-        //이미 저장된 데이터 가져오기 (볼리+)
-        gettingChat();
 
-        //소켓 연결
+
+        //서비스 바인딩
         intent = new Intent(ChatActivity2.this, MyService.class);
         bindService(intent, connection, Context.BIND_AUTO_CREATE);
         startService(intent);
 
-        Log.e("CA2", "소켓 연결 성공"); //여기까지 작동.....
+        //이미 저장된 데이터 가져오기 (볼리+)
+        gettingChat();
 
-        cBound = true;
+        intent.putExtra("CA2","true");
+        startService(intent);
+
+
+
+
+
 
         Log.e("CA2", "176");
 
@@ -207,6 +249,15 @@ public class ChatActivity2 extends AppCompatActivity {
                             DataChatItem dataChatItem = new DataChatItem(sendmsg, UserName, getTime(), receiver, type, 2);
                             Log.d("디버그태그","dataChatItem" + dataChatItem.getItem_chat_content() );
 
+                            SimpleDateFormat mFormat = new SimpleDateFormat("aa hh:mm");
+                            long mNow;
+                            Date mDate;
+                            mNow = System.currentTimeMillis();
+                            mDate = new Date(mNow);
+                            String time = mFormat.format(mDate);
+                            Log.e("CA2", "현재시간 = " +time);
+                            Log.e("CA2", "getTime = " +getTime());
+
 
                             sendWriter = new PrintWriter(mService.Ssocket.getOutputStream());
                             sendWriter.println(joClientInfo); //제이슨 객체
@@ -222,17 +273,12 @@ public class ChatActivity2 extends AppCompatActivity {
                             mHandler2.post(new Runnable() {
                                 @Override
                                 public void run() {
-                                    Log.e("오류태그", "dataChatItem : " + dataChatItem);
+
                                     dataChat.add(dataChatItem);
                                     adapter.notifyItemInserted(dataChat.size() - 1);
                                     chatView.scrollToPosition(dataChat.size() - 1);
                                 }
                             }); //보낸 채팅 화면에 띄우는 핸들러
-
-
-
-
-                            //dataChat.add(new DataChatItem(chat_text, UserName, chat_date , user_id ,type, 1));
 
 
 
@@ -249,8 +295,86 @@ public class ChatActivity2 extends AppCompatActivity {
             }
         });
 
+        //갤러리로 이동하는 버튼
+        btn_camera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Dexter.withContext(ChatActivity2.this)
+                        .withPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
+                        .withListener(new PermissionListener() {
+                            @Override
+                            public void onPermissionGranted(PermissionGrantedResponse permissionGrantedResponse) {
+
+                                Intent intent = new Intent(Intent.ACTION_PICK);
+                                intent.setType("image/*");
+                                intent.setAction(Intent.ACTION_GET_CONTENT);
+                                launcher.launch(intent);
+                            }
+
+                            @Override
+                            public void onPermissionDenied(PermissionDeniedResponse permissionDeniedResponse) {
+
+                            }
+
+                            @Override
+                            public void onPermissionRationaleShouldBeShown(PermissionRequest permissionRequest, PermissionToken permissionToken) {
+                                permissionToken.continuePermissionRequest();
+                            }
+                        }).check();
+
+            }
+        });
+
+    }//close create()
+
+
+
+    //이미지 업로드 관련
+    ActivityResultLauncher<Intent> launcher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>()
+            {
+                @Override
+                public void onActivityResult(ActivityResult result)
+                {
+                    if (result.getResultCode() == RESULT_OK)
+                    {
+                        Intent intent = result.getData();
+                        Uri filepath = intent.getData();
+
+                        try{
+                            InputStream inputStream = getContentResolver().openInputStream(filepath);
+                            bitmap = BitmapFactory.decodeStream(inputStream);
+
+                            ImageView chat_img;
+                            chat_img = findViewById(R.id.chat_img);
+                            chat_img.setVisibility(View.INVISIBLE);
+                            chat_img.setImageBitmap(bitmap);
+                            encodeBitmapImage(bitmap);
+                            upload_img();
+
+                        }catch (Exception e){
+
+                        }
+
+
+
+                    }
+                }
+            });
+
+
+
+    //이미지 인코딩
+    private void encodeBitmapImage(Bitmap bitmap) {
+
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG,100,byteArrayOutputStream);
+
+        byte[] bytesofimage = byteArrayOutputStream.toByteArray();
+        encodeImageString = android.util.Base64.encodeToString(bytesofimage, Base64.DEFAULT);
 
     }
+
 
 
 
@@ -262,6 +386,8 @@ public class ChatActivity2 extends AppCompatActivity {
 
         super.onNewIntent(intent);
     }
+
+
 
     /**
      * Defines callbacks for service binding, passed to bindService()
@@ -275,7 +401,17 @@ public class ChatActivity2 extends AppCompatActivity {
             MyService.LocalBinder binder = (MyService.LocalBinder) service;
             mService = binder.getService();
             isService = true;
-            Log.i("CA2 115", "서비스 연결됨. ");
+//            getNoti(intent);
+            Log.e("CA2 115", "서비스 연결됨. ");
+
+//            mServiceMessenger = new Messenger(service);
+//            try {
+//                Message msg = Message.obtain(null, MyService.MSG_REGISTER_CLIENT);
+//                msg.replyTo = mMessenger;
+//                mServiceMessenger.send(msg);
+//            }
+//            catch (RemoteException e) {
+//            }
 
 
         }
@@ -286,6 +422,24 @@ public class ChatActivity2 extends AppCompatActivity {
             Log.i("CA2 115", "서비스 연결 끊기. ");
         }
     };
+
+    public void setState(int state){
+        this.state = state;
+    }
+
+    public int getState(){
+        return state;
+    }
+
+//    public void setNoti(int state){
+//        this.state = state;
+//    }
+
+//    public boolean getNoti(){
+//        intent.putExtra("CA2","true");
+//        startService(intent);
+//        return true;
+//    }
 
     //시각 나타내는 메소드
     private String getTime() {
@@ -489,18 +643,21 @@ public class ChatActivity2 extends AppCompatActivity {
 //                     chatView.setAdapter(adapter);
 //                     adapter.notifyItemInserted(dataChat.size() - 1);
 //                     chatView.scrollToPosition(dataChat.size() - 1);
-                    mHandler2.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            Log.e("오류태그", "dataChatItem : " + dataChat);
+                    //if(type == "0") {
+                        mHandler2.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                Log.e("오류태그", "dataChatItem : " + dataChat);
 
-                            adapter.notifyItemInserted(dataChat.size() - 1);
-                            chatView.scrollToPosition(dataChat.size() - 1);
-                            //adapter.notifyDataSetChanged();
+                                adapter.notifyItemInserted(dataChat.size() - 1);
+                                chatView.scrollToPosition(dataChat.size() - 1);
+                                //adapter.notifyDataSetChanged();
 //                                    Log.e("오류태그", "dataChat size : " + dataChat.size());
 //                                    chatView.scrollToPosition(dataChat.size() - 1);
-                        }
-                    }); //보낸 채팅 화면에 띄우는 핸들러
+                            }
+                        }); //보낸 채팅 화면에 띄우는 핸들러
+
+                    //}
 
 
 
@@ -516,80 +673,162 @@ public class ChatActivity2 extends AppCompatActivity {
 
     }
 
-    //새롭게 저장된 데이터 가져오기
-    public void getNewData2(){
 
-        new Thread(){
-            public void run(){
-                Log.e("CA2", "188");
+    //이미지 업로드 메소드
+    private void upload_img() {
 
-                try{
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL_send_img_chat,
+                new Response.Listener<String>() { //결과 콜백
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            JSONArray jsonArray = jsonObject.getJSONArray("chat_img"); //"feed"라는 jsonArray를 php에서 받음
 
-                    Log.e("CA2", "194");
-
-                    while (true) {
-
-                    String read = mService.read2;
-                    //JSONObject jsonObject = mService.ChatObject;
-                    JSONArray ja = new JSONArray(read);
-                    jsonObject = ja.getJSONObject(0);
-
-                    Log.e("CA2 ", "read2 JSONObject 내용 : " + jsonObject.toString());
-
-                    user_id_chat = jsonObject.getString("user_id_chat");
-                    chat_text = jsonObject.getString("chat_text");
-                    chat_date = jsonObject.getString("chat_date");
-                    name = jsonObject.getString("name");
-                    receiver = jsonObject.getString("receiver");
-                    type = jsonObject.getString("type");
-
-                    //관리자 계정이 아닐 때 리사이클러뷰에 필요한 데이터 받기
-                        if (UserID != "50") {
-                            if (name.equals(UserName)) { //user가 쓴 채팅이면
-                                dataChat.add(new DataChatItem(chat_text, name, chat_date, receiver, type, 2));
-
-                            } else if (user_id_chat.equals("50") && receiver.equals(UserID)) { //관리자가 쓰고, 받는 사람이 user
-                                dataChat.add(new DataChatItem(chat_text, name, chat_date, receiver, type, 1));
+                            //feed 어레이 풀기
+                            for (int i = 0; i < 1; i++) {
+                                JSONObject object = jsonArray.getJSONObject(i);
+                                user_id_chat = object.getString("user_id_chat");
+                                chat_text = object.getString("chat_text");
+                                chat_date = object.getString("chat_date");
+                                type = object.getString("type"); //1 = image
+                                receiver = object.getString("receiver");
+                                chat_id = object.getString("chat_id");
+                                dataChat.add(new DataChatItem(chat_text, user_id_chat, chat_date, receiver, type, 2));
                             }
+
+                            //보낸 사람(나) 화면에 이미지를 업데이트 시켜줌.
+                            adapter = new ChatItemAdapter(ChatActivity2.this, dataChat);
+                            chatView.setAdapter(adapter); //
+                            adapter.notifyItemInserted(dataChat.size() -1);
+                            chatView.scrollToPosition(dataChat.size() -1);
+
+
+                            new Thread() {
+                            @Override
+                            public void run() {
+                                super.run();
+                                try {
+                                    Log.e("CA2", "이미지 스레드 실행 677");
+                                    JsonObject jsonObject1 = new JsonObject();
+                                    jsonObject1.addProperty("user_id_chat", UserID);
+                                    jsonObject1.addProperty("type", "1");
+                                    jsonObject1.addProperty("chat_text", chat_text);
+                                    jsonObject1.addProperty("receiver", receiver);
+
+                                    sendWriter = new PrintWriter(mService.Ssocket.getOutputStream());//소켓에서 getOutputStream객체를 가져옴 (서버에 데이터 보내기 위함)
+                                    sendWriter.println(jsonObject1); //제이슨 객체
+                                    sendWriter.flush();
+                                    Log.d("jsonObject1(이미지) 보낸 것 확인 ", jsonObject1.toString());
+                                    ///////////////////////여기까지 동작..
+
+
+                                    //해당 소켓스트림이 해당하는 화면을 업데이트 한다.
+                                    InputStreamReader streamReader = new InputStreamReader(mService.Ssocket.getInputStream());
+                                    BufferedReader reader = new BufferedReader(streamReader);
+
+                                    while(true) {
+                                        String gettingImg = reader.readLine();
+                                        Log.e("CA", "gettingImg : " + gettingImg);
+                                        JSONObject object = new JSONObject(gettingImg);
+                                        Log.d("CA", "object gettingImg 값: " + object.toString()); //채팅 전체
+
+                                        user_id_chat = object.getString("user_id_chat");
+                                        chat_text = object.getString("chat_text");
+                                        chat_date = object.getString("chat_date");
+                                        name = object.getString("name");
+                                        receiver = object.getString("receiver");
+                                        type = object.getString("type");
+
+                                        //관리자 계정이 아닐 때 리사이클러뷰에 필요한 데이터 받기
+                                        if (UserID != "50") {
+                                            if (name.equals(UserName)) { //user가 쓴 채팅이면
+                                                dataChat.add(new DataChatItem(chat_text, name, chat_date, receiver, type, 2));
+
+                                            } else if (user_id_chat.equals("50") && receiver.equals(UserID)) { //관리자가 쓰고, 받는 사람이 user
+                                                dataChat.add(new DataChatItem(chat_text, name, chat_date, receiver, type, 1));
+                                            }
+                                        }
+
+                                        //관리자 계정일 때 데이터 받기
+                                        if (receiver.equals(user_id)) {//초록색
+                                            dataChat.add(new DataChatItem(chat_text, name, chat_date, receiver, type, 2));
+                                        } else if (receiver.equals(UserID) && user_id_chat.equals(user_id)) {
+                                            dataChat.add(new DataChatItem(chat_text, name, chat_date, receiver, type, 1));
+                                        }
+
+                                        //if(type == "1") {
+                                            adapter = new ChatItemAdapter(ChatActivity2.this, dataChat);
+                                            chatView.setAdapter(adapter);
+                                            adapter.notifyItemInserted(dataChat.size() - 1);
+                                            chatView.scrollToPosition(dataChat.size() - 1);
+                                            Log.d("dataChat 확인 798", dataChat.toString());
+                                        //}
+                                    }
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+
+                            }
+                        }.start();
+
+
+
+                        } catch (JSONException e) {
+
+
                         }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
 
-                        //관리자 계정일 때 데이터 받기
-                        if (receiver.equals(user_id)) {//초록색
-                            dataChat.add(new DataChatItem(chat_text, name, chat_date, receiver, type, 2));
-                        } else if (receiver.equals(UserID) && user_id_chat.equals(user_id)) {
-                            dataChat.add(new DataChatItem(chat_text, name, chat_date, receiver, type, 1));
-                        }
-
-                        //데이터 그대로 가져와서 화면에 업데이트 (내화면 업데이트)
-                        //  mHandler.post(new getDataTH(dataChat));
+                    }
 
 
-                        //해당 소켓스트림이 해당하는 화면을 업데이트 한다.
-                       // mHandler2.post(new ChatActivity2.getData2(dataChat));
-                    adapter = new ChatItemAdapter(ChatActivity2.this, dataChat);
-                    Log.e("CA2", " 7 ");
-                    chatView.setAdapter(adapter); //셋 어댑터가 안됨!!!
-                    Log.e("CA2", " 8 ");
-                    adapter.notifyDataSetChanged();
-                    Log.e("CA2", " 9 ");
-                     //mHandler2.post(new getData2(dataChat));
-//                        ChatItemAdapter chatItemAdapter = new ChatItemAdapter(ChatActivity2.this, dataChat);
-//                        chatView.setAdapter(chatItemAdapter);
-//                        chatItemAdapter.notifyItemInserted(dataChat);
-//                        //chatItemAdapter.notifyItemInserted(dataChatItemArrayList.size() - 1);
-//                        chatView.scrollToPosition(dataChat.size() - 1);
+                }) {
 
-                    } //close
+            //@org.jetbrains.annotations.Nullable
+            @Override //클라이언트 데이터 서버로 전송하기 위해
+            protected Map<String, String> getParams() {
 
-                }catch (Exception e){
+                //서버에 전송할 데이터 맵 객체에 담아 변환.
+                Map<String, String> params = new HashMap<>();
+
+                params.put("user_id_chat", UserID);
+                params.put("type", "1");
+
+
+                if (UserID.equals("50")) {
+                    params.put("receiver", user_id);
+
+                } else {
+                    params.put("receiver", "50");
 
                 }
+
+                params.put("chat_text", encodeImageString);
+                params.put("chat_date", getTime());
+
+
+
+                return params;
             }
 
 
-        }.start();
+
+        };
+
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(stringRequest);    //서버에 요청
+
 
     }
+
+
+
 
 
 
@@ -622,11 +861,52 @@ public class ChatActivity2 extends AppCompatActivity {
        if(isService){
            unbindService(connection);
            isService = false;
+
        }
     }
 
 
-}
+    private void setStartService() {
+        startService(new Intent(ChatActivity2.this, MyService.class));
+        bindService(new Intent(this, MyService.class), connection, Context.BIND_AUTO_CREATE);
+        mIsBound = true;
+    }
+
+
+    /** Service 로 부터 message를 받음 */
+    private final Messenger mMessenger = new Messenger(new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message msg) {
+            Log.e("CA2","act : what "+msg.what);
+            switch (msg.what) {
+                case MyService.MSG_SEND_TO_ACTIVITY:
+                    int value1 = msg.getData().getInt("fromService");
+                    String value2 = msg.getData().getString("test");
+                    Log.e("CA2","act : value1 "+value1);
+                    Log.e("CA2","act : value2 "+value2);
+                    break;
+            }
+            return false;
+        }
+    }));
+
+    /** Service 로 메시지를 보냄 */
+    private void sendMessageToService(String str) {
+        if (mIsBound) {
+            if (mServiceMessenger != null) {
+                try {
+                    Message msg = Message.obtain(null, MyService.MSG_SEND_TO_SERVICE, str);
+                    msg.replyTo = mMessenger;
+                    mServiceMessenger.send(msg);
+                } catch (RemoteException e) {
+                }
+            }
+        }
+    }
+
+
+
+}//all close
 
 
 //관리자 계정이 아닐 때 리사이클러뷰에 필요한 데이터 받기

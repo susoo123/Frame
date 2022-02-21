@@ -1,65 +1,70 @@
 package com.example.frame;
-
-import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.app.Service;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Build;
+import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
-public class MyFirebaseMessagingService extends FirebaseMessagingService {
-
+class MyFireBaseMessagingService extends FirebaseMessagingService {
+    @Override
+    public void onNewToken(String token) {
+        Log.d("FCM Log", "Refreshed token: " + token);
+    }
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-        if (remoteMessage != null && remoteMessage.getData().size() > 0) {
-            sendNotification(remoteMessage);
+        if (remoteMessage.getNotification() != null) {                      //포어그라운드
+            sendNotification(remoteMessage.getNotification().getBody(), remoteMessage.getNotification().getTitle());
+        }else if (remoteMessage.getData().size() > 0) {                           //백그라운드
+            sendNotification(remoteMessage.getData().get("body"), remoteMessage.getData().get("title"));
+            /* 백그라운드 작동 내용 */
         }
     }
 
-    private void sendNotification(RemoteMessage remoteMessage) {
+    private void sendNotification(String messageBody, String messageTitle)  {
+        Log.d("FCM Log", "알림 메시지: " + messageBody);
 
-        String title = remoteMessage.getData().get("title");
-        String message = remoteMessage.getData().get("message");
+        /* 알림의 탭 작업 설정 */
+        Intent intent = new Intent(this, MainActivity.class);
 
-        final String CHANNEL_ID = "ChannerID";
-        NotificationManager mManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            final String CHANNEL_NAME = "ChannerName";
-            final String CHANNEL_DESCRIPTION = "ChannerDescription";
-            final int importance = NotificationManager.IMPORTANCE_HIGH;
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-            // add in API level 26
-            NotificationChannel mChannel = new NotificationChannel(CHANNEL_ID, CHANNEL_NAME, importance);
-            mChannel.setDescription(CHANNEL_DESCRIPTION);
-            mChannel.enableLights(true);
-            mChannel.enableVibration(true);
-            mChannel.setVibrationPattern(new long[]{100, 200, 100, 200});
-            mChannel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
-            mManager.createNotificationChannel(mChannel);
+        String channelId = "Channel ID";
+        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+
+        /* 알림 만들기 */
+        NotificationCompat.Builder notificationBuilder =
+                new NotificationCompat.Builder(this, channelId)
+                        .setSmallIcon(R.mipmap.ic_launcher)
+                        .setContentTitle(messageTitle)
+                        .setContentText(messageBody)
+                        .setAutoCancel(true)
+                        .setFullScreenIntent(pendingIntent, true);
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        /* 새로운 인텐트로 앱 열기 */
+        Intent newintent = new Intent(this, MainActivity.class);
+        newintent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity( newintent );
+
+        /* 채널 만들기*/
+        /* Android 8.0 이상에서 알림을 게시하려면 알림을 만들어야 함 */
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            String channelName = "Channel Name";
+            NotificationChannel channel = new NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_HIGH);
+            notificationManager.createNotificationChannel(channel);
         }
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID);
-        builder.setSmallIcon(R.drawable.ic_launcher_background);
-        builder.setAutoCancel(true);
-        builder.setDefaults(Notification.DEFAULT_ALL);
-        builder.setWhen(System.currentTimeMillis());
-        builder.setSmallIcon(R.mipmap.ic_launcher);
-        builder.setContentTitle(title);
-        builder.setContentText(message);
-        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
-            builder.setContentTitle(title);
-            builder.setVibrate(new long[]{500, 500});
-        }
-        mManager.notify(0, builder.build());
+        notificationManager.notify(0, notificationBuilder.build());
     }
 
-    @Override
-    public void onNewToken(String s) {
-        super.onNewToken(s);
-    }
 }

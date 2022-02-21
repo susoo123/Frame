@@ -16,7 +16,11 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
+import android.os.Messenger;
+import android.os.RemoteException;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Button;
@@ -36,6 +40,7 @@ import com.example.frame.fragment.MypageAdminFragment;
 import com.example.frame.fragment.MypageFragment;
 import com.example.frame.fragment.SearchFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
@@ -76,7 +81,11 @@ public class MainActivity extends AppCompatActivity {
     Deque<Integer> integerDeque = new ArrayDeque<>(5);
     boolean flag = true;
 
+   // String token = FirebaseMessaging.getInstance().getToken().getResult();
 
+    private Messenger mServiceMessenger = null;
+
+    private Messenger mServiceCallback = null;
 
 
     /**
@@ -91,6 +100,15 @@ public class MainActivity extends AppCompatActivity {
             MyService.LocalBinder binder = (MyService.LocalBinder) service;
             mService = binder.getService();
             mBound = true;
+
+//            mServiceMessenger = new Messenger(service);
+//            try {
+//                Message msg = Message.obtain(null, MyService.MSG_REGISTER_CLIENT);
+//                msg.replyTo = mMessenger;
+//                mServiceMessenger.send(msg);
+//            }
+//            catch (RemoteException e) {
+//            }
         }
 
         @Override
@@ -98,6 +116,7 @@ public class MainActivity extends AppCompatActivity {
             mBound = false;
         }
     };
+
 
 
     @Override
@@ -116,25 +135,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        FirebaseMessaging.getInstance().getToken()
-//                .addOnCompleteListener(new OnCompleteListener<String>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<String> task) {
-//
-//                        if (!task.isSuccessful()) {
-//                            Log.w(TAG, "Fetching FCM registration token failed", task.getException());
-//                            return;
-//                        }
-//
-//                        // Get new FCM registration token
-//                        String token = task.getResult();
-//
-//                        // Log and toast
-//                        String msg = getString(R.string.msg_token_fmt, token);
-//                        Log.d(TAG, msg);
-//                        Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
-//                    }
-//                });
 
         sessionManager = new SessionManager(this);
         sessionManager.checkLogin();
@@ -143,6 +143,44 @@ public class MainActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
             startForegroundService(serviceIntent);
         else startService(serviceIntent);
+
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(new OnCompleteListener<String>() {
+                    @Override
+                    public void onComplete(@NonNull Task<String> task) {
+                        if (!task.isSuccessful()) {
+                            Log.w(TAG, "Fetching FCM registration token failed", task.getException());
+                            return;
+                        }
+
+                        // Get new FCM registration token
+                        String token = task.getResult();
+
+                        // Log and toast
+//                        String msg = getString(R.string.msg_token_fmt, token);
+                        Log.e(TAG, token);
+                        Toast.makeText(MainActivity.this, token, Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+//     FirebaseInstanceId.getInstance().getInstanceId()
+//        .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+//            @Override
+//            public void onComplete(@NonNull Task<InstanceIdResult> task) {
+//                if (!task.isSuccessful()) {
+//                    Log.w(TAG, "getInstanceId failed", task.getException());
+//                    return;
+//                }
+//
+//                // Get new Instance ID token
+//                String token = task.getResult().getToken();
+//
+//                // Log and toast
+//                String msg = getString(R.string.msg_token_fmt, token);
+//                Log.d(TAG, msg);
+//                Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
+//            }
+//        });
 
 
         //서비스 이용!! 소켓 연결!!
@@ -233,20 +271,42 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.replace(R.id.fragment_layout, fragment).commit();      // Fragment로 사용할 MainActivity내의 layout공간을 선택합니다.
     }
 
-//    private void send_FCM(){
-//        Log.d(TAG+ " send_FCM", "실행");
-//        Response.Listener<String> responseListener = new Response.Listener<String>() {
-//            @Override
-//            public void onResponse(String response) {
-//                Log.d(TAG+ " send_FCM",response );
-//
-//
-//            }//  public void onResponse(String response)
-//        };
-//        //fcm_request getUserInformation = new fcm_request(token,responseListener);
-//        RequestQueue queue = Volley.newRequestQueue(MainActivity.this);
+    private void send_FCM(){
+
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(new OnCompleteListener<String>() {
+                    @Override
+                    public void onComplete(@NonNull Task<String> task) {
+
+                        if (!task.isSuccessful()) {
+                            Log.w(TAG, "Fetching FCM registration token failed", task.getException());
+                            return;
+                        }
+
+                        // Get new FCM registration token
+                        String token = task.getResult();
+
+                        // Log and toast
+//                        String msg = getString(R.string.msg_token_fmt, token);
+                        Log.d(TAG, token);
+
+                    }
+                });
+
+        Log.d(TAG+ " send_FCM", "실행");
+        Response.Listener<String> responseListener = new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.d(TAG+ " send_FCM",response );
+
+
+            }//  public void onResponse(String response)
+        };
+
+        //fcm_request getUserInformation = new fcm_request(token,responseListener);
+        RequestQueue queue = Volley.newRequestQueue(MainActivity.this);
 //        queue.add(getUserInformation);
-//    }
+    }
 
 
 
