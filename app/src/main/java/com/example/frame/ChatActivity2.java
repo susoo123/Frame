@@ -905,8 +905,15 @@ public class ChatActivity2 extends AppCompatActivity {
     }
 
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        intent.putExtra("CA2", "false");
+        startService(intent);
+    }
 
-}//all close
+
+    }//all close
 
 
 //관리자 계정이 아닐 때 리사이클러뷰에 필요한 데이터 받기

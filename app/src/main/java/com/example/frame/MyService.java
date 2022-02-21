@@ -195,7 +195,7 @@ public class MyService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        CA2 = mainIntent.getStringExtra("CA2");
+        CA2 = intent.getStringExtra("CA2");
         Log.e("MS", "onStartCommand 실행 !!");
         Log.e("MS", " 200 CA2 : " + CA2);
         try {
@@ -368,7 +368,7 @@ public class MyService extends Service {
 
 
                         //if(getState().equals(true)){
-                        //if(CA2.equals("true")){
+                        if(CA2.equals("true")){
                             Log.e("MS", "323 노티 없음. " );
 //                            Log.e("MS", "state : " + state );
 
@@ -379,11 +379,11 @@ public class MyService extends Service {
                             startActivity(mainIntent);
                             Log.e("MS", "새로 받은 데이터 CA 보냄!!!");
 
-                       // }else { //else 그렇지 않다면 노티피케이션 알람 띄우기
+                        }else { //else 그렇지 않다면 노티피케이션 알람 띄우기
                             Log.e("MS", "333 노티 있음음. " );
-                           // mNotificationManager.notify(NOTIFICATION_ID, notifyBuilder.build());
+                           mNotificationManager.notify(NOTIFICATION_ID, notifyBuilder.build());
 
-                       // }
+                        }
 
 
 
