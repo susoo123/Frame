@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/cardView3"
+    android:layout_width="350dp"
+    android:layout_height="350dp"
+    android:layout_margin="7dp"
+    android:elevation="20dp">
+
+        <ImageView
+            android:id="@+id/item_feed_img"
+            android:layout_width="340dp"
+            android:layout_height="340dp"/>
+
+</androidx.cardview.widget.CardView>

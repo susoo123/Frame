@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.error.VolleyError;
@@ -25,6 +26,7 @@ import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.example.frame.ChatActivity2;
 import com.example.frame.EditProfileActivity;
+import com.example.frame.LoginActivity;
 import com.example.frame.MainActivity;
 import com.example.frame.MyFeedActivity;
 import com.example.frame.R;
@@ -37,6 +39,8 @@ import com.example.frame.etc.DataEvent;
 import com.example.frame.etc.SessionManager;
 import com.example.frame.ChatActivity;
 import com.google.gson.JsonParser;
+import com.kakao.usermgmt.UserManagement;
+import com.kakao.usermgmt.callback.LogoutResponseCallback;
 
 
 import org.json.JSONArray;
@@ -55,7 +59,7 @@ import java.util.Map;
  */
 public class MypageFragment extends Fragment {
     TextView  btn_go_edit_profile;
-    CardView mypage_img;
+    CardView mypage_img,btn_logout;
     ImageView profile_img_iv;
     TextView profile_name;
     Button btn_myfeed, test_btn;
@@ -108,9 +112,10 @@ public class MypageFragment extends Fragment {
        profile_name = view.findViewById(R.id.textView);
        btn_qna = view.findViewById(R.id.btn_qna);
        btn_myticket = view.findViewById(R.id.btn_myticket);
-        btn_myfeed = view.findViewById(R.id.btn_myfeed);
-        test_btn = view.findViewById(R.id.test_btn);
-        winner_num = view.findViewById(R.id.winner_num);
+       btn_myfeed = view.findViewById(R.id.btn_myfeed);
+       test_btn = view.findViewById(R.id.test_btn);
+       winner_num = view.findViewById(R.id.winner_num);
+       btn_logout = view.findViewById(R.id.btn_logout);
         //RequestActivity에서 전달한 번들 저장
         Bundle bundle = this.getArguments();
         //번들 안의 텍스트 불러오기
@@ -195,11 +200,21 @@ public class MypageFragment extends Fragment {
                         startActivity(intent3);
                         break;
 
-//                    case R.id.test_btn:
-//                        //startActivity(new Intent(getActivity(), TicketBoxActivity.class));
-//                        Intent intent4 = new Intent(getActivity(), SocketService.class);
-//                        startActivity(intent4);
-//                        break;
+                    case R.id.btn_logout:
+
+                        sessionManager.logout();
+                        Toast.makeText(getActivity(), "로그아웃 성공", Toast.LENGTH_SHORT).show();
+
+                        UserManagement.getInstance().requestLogout(new LogoutResponseCallback() {
+                            @Override
+                            public void onCompleteLogout() {
+                                Intent intent = new Intent(getActivity(), LoginActivity.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                startActivity(intent);
+                            }
+                        });
+
+                        break;
 
 
 
@@ -212,7 +227,7 @@ public class MypageFragment extends Fragment {
         btn_qna.setOnClickListener(clickListener);
         btn_myticket.setOnClickListener(clickListener);
         btn_myfeed.setOnClickListener(clickListener);
-       // test_btn.setOnClickListener(clickListener);
+        btn_logout.setOnClickListener(clickListener);
 
 
         return view;

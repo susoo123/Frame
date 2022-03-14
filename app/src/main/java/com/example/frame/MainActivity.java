@@ -23,6 +23,7 @@ import android.os.Messenger;
 import android.os.RemoteException;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -45,6 +46,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.kakao.usermgmt.UserManagement;
+import com.kakao.usermgmt.callback.LogoutResponseCallback;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
@@ -73,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
     Socket socket;
     String read;
     Intent intent;
-
+    String token;
 
 
     //바텀네비게이션 변수 초기화
@@ -100,15 +103,6 @@ public class MainActivity extends AppCompatActivity {
             MyService.LocalBinder binder = (MyService.LocalBinder) service;
             mService = binder.getService();
             mBound = true;
-
-//            mServiceMessenger = new Messenger(service);
-//            try {
-//                Message msg = Message.obtain(null, MyService.MSG_REGISTER_CLIENT);
-//                msg.replyTo = mMessenger;
-//                mServiceMessenger.send(msg);
-//            }
-//            catch (RemoteException e) {
-//            }
         }
 
         @Override
@@ -144,50 +138,26 @@ public class MainActivity extends AppCompatActivity {
             startForegroundService(serviceIntent);
         else startService(serviceIntent);
 
-        FirebaseMessaging.getInstance().getToken()
-                .addOnCompleteListener(new OnCompleteListener<String>() {
-                    @Override
-                    public void onComplete(@NonNull Task<String> task) {
-                        if (!task.isSuccessful()) {
-                            Log.w(TAG, "Fetching FCM registration token failed", task.getException());
-                            return;
-                        }
-
-                        // Get new FCM registration token
-                        String token = task.getResult();
-
-                        // Log and toast
-//                        String msg = getString(R.string.msg_token_fmt, token);
-                        Log.e(TAG, token);
-                        Toast.makeText(MainActivity.this, token, Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-//     FirebaseInstanceId.getInstance().getInstanceId()
-//        .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
-//            @Override
-//            public void onComplete(@NonNull Task<InstanceIdResult> task) {
-//                if (!task.isSuccessful()) {
-//                    Log.w(TAG, "getInstanceId failed", task.getException());
-//                    return;
-//                }
+//        FirebaseMessaging.getInstance().getToken()
+//                .addOnCompleteListener(new OnCompleteListener<String>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<String> task) {
+//                        if (!task.isSuccessful()) {
+//                            Log.w(TAG, "Fetching FCM registration token failed", task.getException());
+//                            return;
+//                        }
 //
-//                // Get new Instance ID token
-//                String token = task.getResult().getToken();
+//                        // Get new FCM registration token
+//                        token = task.getResult();
 //
-//                // Log and toast
-//                String msg = getString(R.string.msg_token_fmt, token);
-//                Log.d(TAG, msg);
-//                Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
-//            }
-//        });
+//                        // Log and toast
+////                        String msg = getString(R.string.msg_token_fmt, token);
+//                        Log.e("MA token 155 ", token);
+//                        //파이어 베이스 토큰
+//                        send_FCM();
+//                    }
+//                });
 
-
-        //서비스 이용!! 소켓 연결!!
-//        intent = new Intent(this, SocketService.class);
-//        bindService(intent, connection, Context.BIND_AUTO_CREATE);
-//        startService(intent);
-//        Log.e("MA", "소켓 연결 성공");
 
 
         // 화면 전환 프래그먼트 선언 및 초기 화면 설정
@@ -220,6 +190,8 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView.setOnItemSelectedListener(navListener);
 
 
+
+
 //        Fragment searchFragment = SearchFragment.newInstance();
 //        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 //        transaction.replace(R.id.fragment_layout,searchFragment,"search_fragment");
@@ -232,7 +204,7 @@ public class MainActivity extends AppCompatActivity {
 //
 //        TextView tv_email = findViewById(R.id.tv_email);
 //        ImageView iv_profileimg = findViewById(R.id.iv_profileimg);
-//        btn_logout = findViewById(R.id.btn_logout);
+
 //
 //        Log.d("soo","이미지 경로 받은 값 : "+StrProfileImg);
 //
@@ -242,7 +214,7 @@ public class MainActivity extends AppCompatActivity {
 //        //Glide.with(this).load(StrProfileImg).into(iv_profileimg);
 
 
-        //로그아웃 실행
+//        //로그아웃 실행
 //        btn_logout.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
@@ -273,38 +245,18 @@ public class MainActivity extends AppCompatActivity {
 
     private void send_FCM(){
 
-        FirebaseMessaging.getInstance().getToken()
-                .addOnCompleteListener(new OnCompleteListener<String>() {
-                    @Override
-                    public void onComplete(@NonNull Task<String> task) {
-
-                        if (!task.isSuccessful()) {
-                            Log.w(TAG, "Fetching FCM registration token failed", task.getException());
-                            return;
-                        }
-
-                        // Get new FCM registration token
-                        String token = task.getResult();
-
-                        // Log and toast
-//                        String msg = getString(R.string.msg_token_fmt, token);
-                        Log.d(TAG, token);
-
-                    }
-                });
-
-        Log.d(TAG+ " send_FCM", "실행");
+        Log.e("MA" + " send_FCM : ", "실행");
         Response.Listener<String> responseListener = new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Log.d(TAG+ " send_FCM",response );
+                Log.e("MA" + " send_FCM : ", response );
 
 
             }//  public void onResponse(String response)
         };
 
-        //fcm_request getUserInformation = new fcm_request(token,responseListener);
-        RequestQueue queue = Volley.newRequestQueue(MainActivity.this);
+//        fcm_request getUserInformation = new fcm_request(token,responseListener);
+//        RequestQueue queue = Volley.newRequestQueue(MainActivity.this);
 //        queue.add(getUserInformation);
     }
 
@@ -497,8 +449,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-//        unbindService(connection);
-//        mBound = false;
     }
 
     @Override
@@ -511,26 +461,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public class fcm_request extends StringRequest {
-        // 서버 URL 설정 ( PHP 파일 연동 )
-        final static private String URL = "http://ec2-52-79-204-252.ap-northeast-2.compute.amazonaws.com/sendCommentFCMRequest.php"; //내 서버 명
-        private Map<String, String> map; // Key, Value로 저장 됨
 
-
-        public fcm_request(String Token,Response.Listener<String> listener) {
-            super(Method.POST, URL, listener, null);
-
-            map = new HashMap<>();
-            map.put("Token",Token);
-
-
-
-        }
-        @Override
-        protected Map<String, String> getParams() throws AuthFailureError {
-            return map;
-        }
-    }
 
 
 

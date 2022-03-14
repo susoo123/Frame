@@ -190,7 +190,7 @@
         <androidx.cardview.widget.CardView
             android:id="@+id/btn_myticket"
             android:layout_width="match_parent"
-            android:layout_marginBottom="100dp"
+            android:layout_marginBottom="0dp"
             android:layout_marginTop="20dp"
             android:layout_height="60dp">
             <TextView
@@ -199,6 +199,21 @@
                 android:textSize="30sp"
                 android:layout_gravity="center"
                 android:text="내 티켓                 >"
+                />
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/btn_logout"
+            android:layout_width="match_parent"
+            android:layout_marginBottom="0dp"
+            android:layout_marginTop="20dp"
+            android:layout_height="60dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="25sp"
+                android:layout_gravity="center"
+                android:text="로그 아웃"
                 />
         </androidx.cardview.widget.CardView>
 

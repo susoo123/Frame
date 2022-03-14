@@ -15,27 +15,34 @@
         android:gravity="center"
         android:text="티켓 보내기"
         android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/ticket_noti_text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
-        android:id="@+id/ticket_noti_text"
+<!--    <EditText-->
+<!--        android:id="@+id/ticket_noti_text"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="320dp"-->
+<!--        android:layout_marginHorizontal="20dp"-->
+<!--        android:layout_marginTop="92dp"-->
+<!--        android:gravity="top"-->
+<!--        android:hint="사용자에게 띄울 알림 내용을 입력해주세요."-->
+<!--        app:layout_constraintBottom_toTopOf="@+id/linearLayout3"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintHorizontal_bias="0.0"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        app:layout_constraintVertical_bias="0.0" />-->
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_send_ticket"
         android:layout_width="match_parent"
-        android:layout_height="320dp"
-        android:layout_marginHorizontal="20dp"
-        android:layout_marginTop="92dp"
-        android:gravity="top"
-        android:hint="사용자에게 띄울 알림 내용을 입력해주세요."
+        android:layout_height="300dp"
+        android:layout_marginHorizontal="5dp"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
-
-
+        app:layout_constraintTop_toBottomOf="@+id/sending_ticket_title" />
 
     <LinearLayout
         android:id="@+id/linearLayout3"
@@ -43,12 +50,14 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:padding="10dp"
+        android:gravity="center"
         app:layout_constraintBottom_toTopOf="@+id/btn_send_ticket"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cardView2"
+
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_marginBottom="32dp"
@@ -64,12 +73,7 @@
         </androidx.cardview.widget.CardView>
 
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_send_ticket"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:layout_marginHorizontal="5dp"
-            />
+
 
 <!--        <androidx.cardview.widget.CardView-->
 <!--            android:id="@+id/cardView3"-->

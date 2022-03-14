@@ -58,11 +58,9 @@ public class MyService extends Service {
     OutputStream sender;
     InputStream writer;
     BufferedReader reader;
-    Notification Notifi ;
-    NotificationManager mNotificationManager2;
-    ServiceThread thread;
+
     String read2;
-    JSONObject ChatObject;
+
     NotificationCompat.Builder notifyBuilder2;
 
     // Channel에 대한 id 생성 : Channel을 구부하기 위한 ID 이다.
@@ -82,22 +80,16 @@ public class MyService extends Service {
     NotificationCompat.Builder notifyBuilder;
 
     IBinder mBinder = new LocalBinder();
-    ChatActivity2 chatActivity2 = new ChatActivity2();
 
     Intent mainIntent;
     int state;
-    Activity activity;
+
     String CA2;
 
     public static final int MSG_SEND_TO_ACTIVITY = 4;
     public static final int MSG_SEND_TO_SERVICE = 3;
     public static final int MSG_REGISTER_CLIENT = 1;
-    private Messenger mClient = null;   // Activity 에서 가져온 Messenger
 
-    public static final int MSG_CLIENT_CONNECT = 1;
-    public static final int MSG_CLIENT_DISCONNECT = 2;
-    public static final int MSG_ADD_VALUE = 3;
-    public static final int MSG_ADDED_VALUE = 4;
 
     private ArrayList<Messenger> mClientCallbacks = new ArrayList<Messenger>();
     //final Messenger mMessenger = new Messenger(new CallbackHandler());
@@ -118,7 +110,7 @@ public class MyService extends Service {
 
     @Override
     public IBinder onBind(Intent intent) {
-         mMessenger.getBinder();
+        // mMessenger.getBinder();
         return mBinder;
     }
 
@@ -177,19 +169,19 @@ public class MyService extends Service {
 
     }
 
-    /** activity로부터 binding 된 Messenger */
-    private final Messenger mMessenger = new Messenger(new Handler(new Handler.Callback() {
-        @Override
-        public boolean handleMessage(Message msg) {
-            Log.e("MS","MyService - message what : "+msg.what +" , msg.obj "+ msg.obj);
-            switch (msg.what) {
-                case MSG_REGISTER_CLIENT:
-                    mClient = msg.replyTo;  // activity로부터 가져온
-                    break;
-            }
-            return false;
-        }
-    }));
+//    /** activity로부터 binding 된 Messenger */
+//    private final Messenger mMessenger = new Messenger(new Handler(new Handler.Callback() {
+//        @Override
+//        public boolean handleMessage(Message msg) {
+//            Log.e("MS","MyService - message what : "+msg.what +" , msg.obj "+ msg.obj);
+//            switch (msg.what) {
+//                case MSG_REGISTER_CLIENT:
+//                    mClient = msg.replyTo;  // activity로부터 가져온
+//                    break;
+//            }
+//            return false;
+//        }
+//    }));
 
 
     @Override
@@ -406,101 +398,6 @@ public class MyService extends Service {
 
 
 
-//    private void getWinnerList(Intent intent) throws JSONException, IOException {
-//
-//
-//        if (intent.getStringExtra("winnerList") != null) {
-//
-//            eBound = true;
-//            String winnerList = intent.getStringExtra("winnerList");
-//
-//            Log.d("MyService 채팅 winnerList 도착함. ", "String winnerList : " + winnerList);//
-//
-//            JSONArray jsonArray = new JSONArray(winnerList);
-//            Log.d("MyService  jsonArray. ", "String winnerList jsonArray : " + jsonArray);//
-//
-//            mNotificationManager.notify(NOTIFICATION_ID, notifyBuilder.build());
-//
-//            //JSONObject joClientInfo = new JSONObject((intent.getStringExtra("json")));
-//
-//            ////////채팅 보내는 쓰레드
-//            new Thread() {
-//                @Override
-//                public void run() {
-//                    super.run();
-//                    try {
-//                        //메세지창에 뜨는 메세지
-//
-//                        //서버에 데이터 보내기
-////                        // PrintWirte에 OutputStream을 래핑하여 다음과 같이 데이터를 텍스트 형식으로 보낼 수 있음.
-////                        sendWriter.println(joClientInfo); //제이슨 객체
-////                        sendWriter.flush();//서버로 보내짐
-////                        Log.d("서버로 채팅 보내기 성공", joClientInfo.toString());//동작함..!!
-//
-//
-//                    } catch (Exception e) {
-//                        e.printStackTrace();
-//                    }
-//
-//                }
-//
-//            }
-//                    .start();
-//
-//        }
-//
-//
-//        //데이터 받기
-//        new Thread() {
-//            public void run() {
-//
-//                try {
-//                    sendWriter = new PrintWriter(Ssocket.getOutputStream());
-//                    BufferedReader input = new BufferedReader(new InputStreamReader(Ssocket.getInputStream()));
-//
-//                    while (true) {
-//
-//                        read2 = input.readLine();
-//                        //ChatObject = ja.getJSONObject(0);
-//                        Log.e("MS", "402 read2 확인해봐라 " + " object : " + read2);
-//                        //String newTextData = (String) object.get("chat_text");
-////                        Log.e("MS", "newTextData 확인해봐라 " + newTextData);
-//
-//
-//                        // 다시 액티비티로 데이터 보내주기
-//                        Intent sendingTextMsgIntent = new Intent(MyService.this, ChatActivity2.class);
-//                        //액티비티로 보낸다.
-//                        sendingTextMsgIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
-//                                Intent.FLAG_ACTIVITY_SINGLE_TOP |
-//                                Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                        //sendingTextMsgIntent.putExtra("newTextData", ChatObject.toString());
-//                        sendingTextMsgIntent.putExtra("newTextData", read2);
-//                        startActivity(sendingTextMsgIntent);
-//                        Log.e("MS", "새로 받은 데이터 CA 보냄!!!");
-//                        //mNotificationManager.notify(NOTIFICATION_ID, notifyBuilder.build());
-//
-//
-//
-//                    }
-//
-//
-//                } catch (Exception e) {
-//
-//                }
-//            }
-//
-//
-//        }.start();
-//
-//
-//    }
-//
-//
-//
-//
-//
-
-
 
 
 
@@ -636,3 +533,100 @@ public class MyService extends Service {
 //                    .start();
 //
 //        }
+
+
+
+//    private void getWinnerList(Intent intent) throws JSONException, IOException {
+//
+//
+//        if (intent.getStringExtra("winnerList") != null) {
+//
+//            eBound = true;
+//            String winnerList = intent.getStringExtra("winnerList");
+//
+//            Log.d("MyService 채팅 winnerList 도착함. ", "String winnerList : " + winnerList);//
+//
+//            JSONArray jsonArray = new JSONArray(winnerList);
+//            Log.d("MyService  jsonArray. ", "String winnerList jsonArray : " + jsonArray);//
+//
+//            mNotificationManager.notify(NOTIFICATION_ID, notifyBuilder.build());
+//
+//            //JSONObject joClientInfo = new JSONObject((intent.getStringExtra("json")));
+//
+//            ////////채팅 보내는 쓰레드
+//            new Thread() {
+//                @Override
+//                public void run() {
+//                    super.run();
+//                    try {
+//                        //메세지창에 뜨는 메세지
+//
+//                        //서버에 데이터 보내기
+////                        // PrintWirte에 OutputStream을 래핑하여 다음과 같이 데이터를 텍스트 형식으로 보낼 수 있음.
+////                        sendWriter.println(joClientInfo); //제이슨 객체
+////                        sendWriter.flush();//서버로 보내짐
+////                        Log.d("서버로 채팅 보내기 성공", joClientInfo.toString());//동작함..!!
+//
+//
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+//
+//                }
+//
+//            }
+//                    .start();
+//
+//        }
+//
+//
+//        //데이터 받기
+//        new Thread() {
+//            public void run() {
+//
+//                try {
+//                    sendWriter = new PrintWriter(Ssocket.getOutputStream());
+//                    BufferedReader input = new BufferedReader(new InputStreamReader(Ssocket.getInputStream()));
+//
+//                    while (true) {
+//
+//                        read2 = input.readLine();
+//                        //ChatObject = ja.getJSONObject(0);
+//                        Log.e("MS", "402 read2 확인해봐라 " + " object : " + read2);
+//                        //String newTextData = (String) object.get("chat_text");
+////                        Log.e("MS", "newTextData 확인해봐라 " + newTextData);
+//
+//
+//                        // 다시 액티비티로 데이터 보내주기
+//                        Intent sendingTextMsgIntent = new Intent(MyService.this, ChatActivity2.class);
+//                        //액티비티로 보낸다.
+//                        sendingTextMsgIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
+//                                Intent.FLAG_ACTIVITY_SINGLE_TOP |
+//                                Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                        //sendingTextMsgIntent.putExtra("newTextData", ChatObject.toString());
+//                        sendingTextMsgIntent.putExtra("newTextData", read2);
+//                        startActivity(sendingTextMsgIntent);
+//                        Log.e("MS", "새로 받은 데이터 CA 보냄!!!");
+//                        //mNotificationManager.notify(NOTIFICATION_ID, notifyBuilder.build());
+//
+//
+//
+//                    }
+//
+//
+//                } catch (Exception e) {
+//
+//                }
+//            }
+//
+//
+//        }.start();
+//
+//
+//    }
+//
+//
+//
+//
+//
+

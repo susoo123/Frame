@@ -92,8 +92,8 @@ dependencies {
 
 
 //    //레트로핏2
-//    implementation 'com.squareup.retrofit2:retrofit:2.7.2'
-//    implementation 'com.squareup.retrofit2:converter-gson:2.6.2'
+    implementation 'com.squareup.retrofit2:retrofit:2.7.2'
+    implementation 'com.squareup.retrofit2:converter-gson:2.6.2'
 
 
     //이미지 원모양으로

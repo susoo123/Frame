@@ -1,5 +1,7 @@
 package com.example.frame;
 
+import static android.content.ContentValues.TAG;
+
 import android.Manifest;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -39,8 +41,13 @@ import com.android.volley.error.VolleyError;
 import com.android.volley.request.SimpleMultiPartRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.frame.adapter.AddFeedImgAdapter;
+import com.example.frame.adapter.AddFeedImgAdapter2;
 import com.example.frame.etc.SessionManager;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.gson.JsonObject;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionDeniedResponse;
@@ -68,12 +75,15 @@ public class SendTicketActivity extends AppCompatActivity {
     Bitmap bitmap;
     private String encodeImageString;
     RecyclerView recyclerView;
-    AddFeedImgAdapter adapter;
+    AddFeedImgAdapter2 adapter;
     private ArrayList<String> feedImgArrayList = new ArrayList<>(); //pathList
     private Dialog dialog;
     ProgressDialog progressDialog;
     private  ArrayList<Uri> uriList = new ArrayList<>();
     ArrayList<String> mainPathList = new ArrayList<String>();
+    ArrayList<String> winnerArray = new ArrayList<>();
+    String winnerData, event_id,cntWinner;
+    //String token ="fqKsE3TaTNKjon0D4gCwhl:APA91bHu2r7JDu9HXKufcAZ1kLMIgBMoAyqHkRtJkYhabKuJAk7EjLoM7aEwOVQ5afItf1tCpFcLnBvwjtnE1CN_JsF4VooH7IG8vnT0mfiRMsbdV-YfQEoiv11MRjjmIf3ht0UHm26f";
 
 
 
@@ -81,20 +91,27 @@ public class SendTicketActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_send_ticket);
-        ticket_noti_text = findViewById(R.id.ticket_noti_text);
         btn_ticket_camera = findViewById(R.id.btn_ticket_camera);
         recyclerView = findViewById(R.id.rv_send_ticket);
         btn_send_ticket= findViewById(R.id.btn_send_ticket);
 
+        Intent intent2 = getIntent();
+        winnerData = intent2.getStringExtra("winnerList");
+        Log.e("SendTicketA", "winnerList String data : " + winnerData);
+        cntWinner = intent2.getStringExtra("cntWinner");
+        Log.e("SendTicketA", "cntWinner : " + cntWinner);
+
+        event_id = intent2.getStringExtra("event_id");
+        Log.e("SendTicketA", "event_id : " + event_id);
 
 
-        //피드 업로드 버튼 누르면 실행
+        //버튼 누르면 실행
         btn_send_ticket.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.P)
             @Override
             public void onClick(View v) {
 
-                sendImages();
+                sendTicket();
 
             }
         });
@@ -166,7 +183,7 @@ public class SendTicketActivity extends AppCompatActivity {
 
                             uriList.add(imgUri);
 
-                            adapter = new AddFeedImgAdapter(getApplicationContext(), feedImgArrayList);
+                            adapter = new AddFeedImgAdapter2(getApplicationContext(), feedImgArrayList);
                             recyclerView.setAdapter(adapter);   // 리사이클러뷰에 어댑터 세팅
                             recyclerView.setLayoutManager(new LinearLayoutManager(SendTicketActivity.this, LinearLayoutManager.HORIZONTAL, true));     // 리사이클러뷰 수평 스크롤 적용
 
@@ -204,7 +221,7 @@ public class SendTicketActivity extends AppCompatActivity {
                                     }
                                 }
 
-                                adapter = new AddFeedImgAdapter(getApplicationContext(), feedImgArrayList);
+                                adapter = new AddFeedImgAdapter2(getApplicationContext(), feedImgArrayList);
                                 recyclerView.setAdapter(adapter);   // 리사이클러뷰에 어댑터 세팅
                                 recyclerView.setLayoutManager(new LinearLayoutManager(SendTicketActivity.this, LinearLayoutManager.HORIZONTAL, true));     // 리사이클러뷰 수평 스크롤 적용
 
@@ -238,13 +255,7 @@ public class SendTicketActivity extends AppCompatActivity {
 
 
 
-    public void sendImages(){
-
-
-        sessionManager = new SessionManager(this);
-        HashMap<String,String> user = sessionManager.getUserDetail();
-        String user_id = user.get(sessionManager.ID);//로그인 한 사용자 id 가져오기(쉐어드에서)
-
+    public void sendTicket(){
 
         SimpleMultiPartRequest smpr = new SimpleMultiPartRequest(Request.Method.POST, URL_send_ticket, new Response.Listener<String>() {
             @Override
@@ -256,9 +267,16 @@ public class SendTicketActivity extends AppCompatActivity {
                     String post = jsonObject.getString("upload");
 
                     if(post.equals("1")){
-
+                        Log.e("STA", "270 성공!");
                         Toast.makeText(SendTicketActivity.this, "티켓 보내기 성공", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(SendTicketActivity.this, MainActivity.class));
+                        send_FCM();
+                        Log.e("STA", "273 성공!");
+                        Intent intent = new Intent(SendTicketActivity.this, EventWinnerListActivity.class);
+//                        intent.putExtra("sendSuccess","false");
+                        intent.putExtra("event_id",event_id);
+//                        Log.e("STA", "티켓보내기 성공!");
+                        startActivity(intent);
+//                        startActivity(new Intent(SendTicketActivity.this, EventWinnerListActivity.class));
 
                     }else{
                         Toast.makeText(SendTicketActivity.this, "티켓 보내기 실패!!", Toast.LENGTH_SHORT).show();
@@ -283,9 +301,12 @@ public class SendTicketActivity extends AppCompatActivity {
 
 
         //데이터 추가
-        smpr.addStringParam("user_id", user_id); //쉐어드에서 가져온 로그인한 사용자 id
-        //smpr.addStringParam("receiver_id", receiver_id); //피드 고유번호
+        smpr.addStringParam("event_id", event_id);
+        smpr.addStringParam("cntwinner", cntWinner);
+        smpr.addStringParam("receiver_id", winnerData);
         smpr.addStringParam("cntImage", String.valueOf(feedImgArrayList.size()));//이미지 개수 보내기
+        //smpr.addStringParam("receiverData", String.valueOf(feedImgArrayList.size()));//이미지 개수 보내기
+
 
 
         //이미지 파일 추가
@@ -320,18 +341,26 @@ public class SendTicketActivity extends AppCompatActivity {
 
     }
 
+    private void send_FCM(){
+
+        Log.e("MA" + " send_FCM : ", "실행");
+        Response.Listener<String> responseListener = new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.e("MA" + " send_FCM : ", response );
 
 
-    //이미지 인코딩
-    private void encodeBitmapImage(Bitmap bitmap) {
+            }//  public void onResponse(String response)
+        };
 
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG,100,byteArrayOutputStream);
 
-        byte[] bytesofimage = byteArrayOutputStream.toByteArray();
-        encodeImageString = Base64.encodeToString(bytesofimage, Base64.DEFAULT);
-
+        fcm_request getUserInformation = new fcm_request(winnerData,cntWinner,responseListener);
+        RequestQueue queue = Volley.newRequestQueue(SendTicketActivity.this);
+        queue.add(getUserInformation);
     }
+
+
+
 
 
 }

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -53,12 +54,14 @@ import java.security.NoSuchAlgorithmException;
 
 public class LoginActivity extends AppCompatActivity {
     private TextInputEditText email, password;
-    private  TextView btn_login, btn_findingIdPw, btn_register;
+    private  TextView btn_login, btn_findingIdPw, btn_register, btn_send_mail_again;
     private ProgressBar loading;
     private static String URL_Login ="http://ec2-52-79-204-252.ap-northeast-2.compute.amazonaws.com/login.php";
     private static String URL_email ="http://ec2-52-79-204-252.ap-northeast-2.compute.amazonaws.com/register.php";
     private AlertDialog dialog;
     SessionManager sessionManager;
+    //private LinearLayout btn_send_mail_again;
+
 
     //카카오 로그인 관련
     private ISessionCallback mSessionCallback;
@@ -69,6 +72,8 @@ public class LoginActivity extends AppCompatActivity {
         //getHashKey();
 
         sessionManager = new SessionManager(this);
+
+        btn_send_mail_again = findViewById(R.id.check_mail_again);
 
         //카카오 로그인 구현
         mSessionCallback = new ISessionCallback() {
@@ -165,7 +170,16 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-    }
+        //메일인증이 오지 않았을 때 누르는 버튼
+        btn_send_mail_again.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                view.getContext().startActivity(new Intent(LoginActivity.this, SendMailAgain.class));
+
+            }
+        });
+
+    }//close create
 
     //로그인 함수
     private void Login(String email, String password) {

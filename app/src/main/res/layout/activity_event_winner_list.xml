@@ -52,15 +52,42 @@
         android:scrollbarThumbVertical="@color/colorG"
         android:scrollbars="vertical" />
 
-    <Button
-        android:id="@+id/btn_send_notice"
-        android:layout_width="match_parent"
-        android:layout_height="65dp"
-        android:text="당첨자들에게 알림보내기"
-        android:textStyle="bold"
-        android:textSize="18sp"
-        android:backgroundTint="@color/colorG"
-    />
+<!--    <LinearLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:weightSum="10"-->
+<!--        android:orientation="horizontal">-->
+<!--    <CheckBox-->
+<!--        android:id="@+id/checkbox_all_check"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="65dp"-->
+<!--        android:text="모두 선택"-->
+<!--        android:textStyle="bold"-->
+<!--        android:textSize="18sp"-->
+<!--        android:layout_weight="3"-->
+<!--        android:textColor="@color/white"-->
+<!--        android:layout_marginStart="5dp"-->
+<!--        android:layout_marginEnd="3dp"-->
+<!--        android:backgroundTint="@color/colorG"-->
+<!--        />-->
+
+<!--    <TextView-->
+<!--        android:id="@+id/btn_send_notice"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="65dp"-->
+<!--        android:layout_weight="7"-->
+<!--        android:layout_gravity="center"-->
+<!--        android:gravity="center"-->
+<!--        android:background="@color/colorG"-->
+<!--        android:text="당첨자들에게 알림보내기"-->
+<!--        android:textColor="@color/white"-->
+<!--        android:textSize="18sp"-->
+<!--        android:layout_marginStart="3dp"-->
+<!--        android:layout_marginEnd="5dp"-->
+<!--        android:backgroundTint="@color/colorG"-->
+<!--    />-->
+
+<!--    </LinearLayout>-->
 
 </LinearLayout>
 

@@ -24,6 +24,8 @@ public class EventWinnerListAdapter extends RecyclerView.Adapter<EventWinnerList
     private Context context;
     private ArrayList<DataRegister> entry;
 
+
+
     //5. (다중선택리사이클러뷰)
     public EventWinnerListAdapter(Context context, ArrayList<DataRegister> entry) {
         this.context = context;
@@ -68,8 +70,9 @@ public class EventWinnerListAdapter extends RecyclerView.Adapter<EventWinnerList
     public class MyViewHolder extends RecyclerView.ViewHolder{
 
         private TextView user_name, user_email,user_id;
-        private ImageView img_checked,img_checked2;
         private RelativeLayout background;
+        private ImageView img_checked2;
+
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -89,6 +92,11 @@ public class EventWinnerListAdapter extends RecyclerView.Adapter<EventWinnerList
             user_email.setText(data.getUser_email());
             background.setBackgroundColor(Color.TRANSPARENT);
 
+//            if(data.getSend_check().equals("Y")){
+//                background.setBackgroundColor(Color.parseColor("#878484"));
+//                background.setEnabled(false);
+//                itemView.setEnabled(false);
+//            }
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -99,17 +107,32 @@ public class EventWinnerListAdapter extends RecyclerView.Adapter<EventWinnerList
                     img_checked2.setVisibility(data.isChecked() ? View.VISIBLE : View.GONE);
 
                     //리사이클러뷰 아이템 클릭했을 때 배경 색 변하도록!
-                    background.setBackgroundColor(data.isChecked() ? Color.parseColor("#F7E598") : Color.TRANSPARENT);
+                    //background.setBackgroundColor(data.isChecked() ? Color.parseColor("#F7E598") : Color.TRANSPARENT);
 
                 }
-            });
+            });//itemView close.
+
+//
+
         }
 
 
     }
 
     //3. getting all items selected (다중선택리사이클러뷰)
-    public ArrayList<DataRegister> getAll(){
+    public ArrayList<DataRegister> getAll(RelativeLayout background){
+
+//        ArrayList<DataRegister> selected = new ArrayList<>();
+//        for (int i = 0; i < entry.size(); i++) {
+//            if (entry.get(i).isChecked()) {
+//                selected.add(entry.get(i));
+//                entry.get(i).setChecked(false);
+//                background.setBackgroundColor(Color.parseColor("#878484"));
+//
+//            }
+//        }
+
+        background.setBackgroundColor(Color.parseColor("#878484"));
         return entry;
     }
 

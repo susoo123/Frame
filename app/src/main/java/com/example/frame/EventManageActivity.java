@@ -129,6 +129,7 @@ public class EventManageActivity extends AppCompatActivity {
                 Intent intent = new Intent(getApplicationContext(), EventRegisterActivity.class);
 //              Intent intent = new Intent(getApplicationContext(), EventWinnerListActivity.class);
                 intent.putExtra("event_id",eventList.get(position).getEvent_id());
+                Log.e("EMA", "event_id 확인 : " + eventList.get(position).getEvent_id());
                 startActivity(intent);
             }
         };
